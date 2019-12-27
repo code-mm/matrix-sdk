@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+
+    implementation "org.ms:sdk-modules:laster-release"
+
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.10.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.2'
+    implementation group: 'io.reactivex.rxjava2', name: 'rxandroid', version: '2.0.2'
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.lifecycle:viewmodel:1.1.1"
+    implementation "android.arch.lifecycle:livedata:1.1.1"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+
+
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+            pom.version = "${rootProject.ext.maven_version}"
+            pom.artifactId = "sdk-matrix"
+            pom.groupId = "org.ms"
+        }
+    }
+}
+
+
+task install(dependsOn: uploadArchives)
