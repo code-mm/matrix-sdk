@@ -17,20 +17,19 @@ public class MatrixRequest {
         return request;
     }
 
-    private static String BASE_URL = "https://www.mhw828.com/";
+    private static String HOME_SERVER = "https://www.mhw828.com/";
 
-    public void setBaseUrl(String url) {
-        BASE_URL = url;
+    public void setHomeServer(String url) {
+        HOME_SERVER = url;
     }
 
-    public String getBaseUrl() {
-        return BASE_URL;
+    public String getHomeServer() {
+        return HOME_SERVER;
     }
-
 
     // 获取登录类型
     public void getLoginType(MatrixCallBack callBack) {
-        Modules.getRequestModule().get(null, BASE_URL + "_matrix/client/r0/login", callBack);
+        Modules.getRequestModule().get(null, HOME_SERVER + "_matrix/client/r0/login", callBack);
     }
 
     /**
@@ -42,17 +41,22 @@ public class MatrixRequest {
      */
     public void login(String username, String password, final MatrixCallBack callBack) {
         Map<String, String> headers = new HashMap<>();
-        JSONObject body = new JSONObject();
+
+        JSONObject obj1 = new JSONObject();
+        JSONObject obj2 = new JSONObject();
         try {
-            body.put("username", username);
-            body.put("password", password);
-            body.put("auth", "m.login.password");
+            obj1.put("type", "m.id.user");
+            obj1.put("user", username);
+            obj2.put("identifier", obj1);
+            obj2.put("initial_device_display_name", "");
+            obj2.put("password", password);
+            obj2.put("type", "m.login.password");
+
         } catch (Exception e) {
             Modules.getExceptionModule().printStackTrace(e);
         }
-
-        String bodyString = body.toString();
-        Modules.getRequestModule().requestBody(headers, BASE_URL + "_matrix/client/r0/login", bodyString, callBack);
+        String bodyString = obj2.toString();
+        Modules.getRequestModule().requestBody(headers, HOME_SERVER + "_matrix/client/r0/login", bodyString, callBack);
     }
 
 
@@ -63,11 +67,11 @@ public class MatrixRequest {
      * @param bodyString {}
      * @param callBack
      */
-    public void UserIdFilter(String userId, String bodyString, MatrixCallBack callBack) {
+    public void userIdFilter(String userId, String bodyString, MatrixCallBack callBack) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("Accept", "application/json");
-        String url = BASE_URL + "_matrix/client/r0/user/" + userId + "/filter";
+        String url = HOME_SERVER + "_matrix/client/r0/user/" + userId + "/filter";
         Modules.getRequestModule().requestBody(headers, url, bodyString, callBack);
 
     }
@@ -90,7 +94,7 @@ public class MatrixRequest {
             String set_presence,
             int timeout,
             MatrixCallBack callBack) {
-        String url = BASE_URL + "_matrix/client/r0/sync?filter=" + filter + "&since" + since + "&full_state" + full_state + "&set_presence" + set_presence + "&timeout" + timeout + "&access_token" + access_token;
+        String url = HOME_SERVER + "_matrix/client/r0/sync?filter=" + filter + "&since=" + since + "&full_state=" + full_state + "&set_presence=" + set_presence + "&timeout=" + timeout + "&access_token=" + access_token;
         Modules.getRequestModule().get(null, url, callBack);
     }
 }

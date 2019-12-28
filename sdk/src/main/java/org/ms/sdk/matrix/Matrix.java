@@ -1,27 +1,38 @@
 package org.ms.sdk.matrix;
 
-public class Matrix {
-    private static final Matrix instance = new Matrix();
+import org.ms.sdk.matrix.inter.IMatrix;
 
-    private Matrix() {
+public class Matrix implements IMatrix {
+
+    @Override
+    public void setHomeServer(String server) {
+        MatrixRequest.getInstance().setHomeServer(server);
     }
 
-    public static Matrix getInstance() {
-        return instance;
+    @Override
+    public String getHomeServer() {
+        return MatrixRequest.getInstance().getHomeServer();
     }
 
+    @Override
+    public void getClientVersion(MatrixCallBack callBack) {
 
-    public void setBaseUrl(final String url) {
-        MatrixRequest.getInstance().setBaseUrl(url);
+
     }
 
-    public String getBaseUrl()
-    {
-        return MatrixRequest.getInstance().getBaseUrl();
-    }
-
-
-    public void login(final String username, final String password, MatrixCallBack callBack) {
+    @Override
+    public void login(String username, String password, MatrixCallBack callBack) {
         MatrixRequest.getInstance().login(username, password, callBack);
+    }
+
+    @Override
+    public void userIdFilter(String userId, String bodyString, MatrixCallBack callBack) {
+
+        MatrixRequest.getInstance().userIdFilter(userId, bodyString, callBack);
+    }
+
+    @Override
+    public void sync(String access_token, String filter, String since, boolean full_state, String set_presence, int timeout, MatrixCallBack callBack) {
+        MatrixRequest.getInstance().sync(access_token, filter, since, full_state, set_presence, timeout, callBack);
     }
 }

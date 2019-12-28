@@ -4,7 +4,6 @@ import org.ms.module.supper.inter.common.CallBack;
 
 public class MatrixCallBack  extends CallBack {
 
-
     @Override
     public void onSuccess(Object o) {
         super.onSuccess(o);
