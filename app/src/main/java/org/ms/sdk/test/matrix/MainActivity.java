@@ -22,6 +22,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+
+
     private Button buttonSync;
     private Button buttonMessage;
     private Button buttonRoomList;
@@ -39,7 +41,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         buttonSync = findViewById(R.id.buttonSync);
         buttonSync.setOnClickListener(this);
 
-        buttonMessage = findViewById(R.id.buttonSync);
+        buttonMessage = findViewById(R.id.buttonMessage);
         buttonMessage.setOnClickListener(this);
 
         buttonRoomList = findViewById(R.id.buttonRoomList);
@@ -71,81 +73,43 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.buttonMessage:
 
-
-                new Thread(new Runnable() {
+                Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        System.out.println("查询消息");
+
                         List<MatrixMessage> matrixMessages = MatrixMessageInjection.provideDataDataSource().getMessages();
-
-
                         for (MatrixMessage it : matrixMessages) {
-
-
-                            String message = it.getMessage();
-
-                            System.out.println(message);
-
-
+                            System.out.println(Modules.getUtilsModule().getGsonUtils().toJson(it));
                         }
                     }
-                }).start();
-
-
-
+                });
                 break;
 
             case R.id.buttonRoomList:
-
-
-
-
-                new Thread(new Runnable() {
+                Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {
                     @Override
                     public void run() {
+                        System.out.println("查询房间列表");
 
                         List<MatrixRoom> rooms = MatrixRoomInjection.provideDataDataSource().getRooms();
-
-
                         for (MatrixRoom it : rooms) {
-
                             System.out.println(it.getRoomId());
                         }
                     }
-                }).start();
-
-
-
-
+                });
                 break;
 
             case R.id.buttonUserInfo:
-
-
-
-                new Thread(
-
-                        new Runnable() {
-                            @Override
-                            public void run() {
-
-
-
-                            }
-                        }
-
-                ).start();
-
+                System.out.println("查询用户信息");
 
                 LiveData<MatrixUser> lastUser =
                         MatrixUserInjection.provideDataDataSource().getLastUser();
-
                 lastUser.observeForever(new Observer<MatrixUser>() {
                     @Override
                     public void onChanged(@Nullable MatrixUser matrixUser) {
-
-
                         System.out.println(matrixUser.getUsername());
-
                     }
                 });
 

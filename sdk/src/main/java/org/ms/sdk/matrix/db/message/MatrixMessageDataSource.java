@@ -6,6 +6,8 @@ public interface MatrixMessageDataSource {
 
     List<MatrixMessage> getMessages();
 
+    MatrixMessage eventIdByMessage(String eventId);
+
     void insert(MatrixMessage... data);
 
     void delete(MatrixMessage... data);

@@ -12,6 +12,10 @@ public interface MatrixUserDao {
     @Query("SELECT * FROM _matrix_user ORDER BY _id DESC LIMIT 1")
     LiveData<MatrixUser> getLast();
 
+
+    @Query("SELECT * FROM _matrix_user WHERE _userid = (:userId)")
+    MatrixUser userIdByUser(String userId);
+
     @Insert
     void insert(MatrixUser... matrixUsers);
 

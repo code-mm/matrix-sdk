@@ -5,10 +5,6 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 
 import org.ms.module.supper.client.Modules;
-import org.ms.sdk.matrix.db.message.MatrixMessage;
-import org.ms.sdk.matrix.db.message.MatrixMessageDao;
-import org.ms.sdk.matrix.db.message.MatrixMessageDatabase;
-
 @Database(entities = {MatrixRoom.class}, version = 1, exportSchema = false)
 public abstract class MatrixRoomDatabase extends RoomDatabase {
 

@@ -2,10 +2,7 @@ package org.ms.sdk.matrix;
 
 import org.json.JSONObject;
 import org.ms.module.supper.client.Modules;
-import org.ms.module.supper.inter.common.CallBack;
 import org.ms.module.supper.inter.common.ICallBack;
-import org.ms.module.supper.inter.module.Module;
-import org.ms.sdk.matrix.MatrixCallBack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +74,6 @@ public class MatrixRequest {
 
     }
 
-
     /**
      * @param access_token
      * @param filter
@@ -100,5 +96,54 @@ public class MatrixRequest {
     }
 
 
+    /**
+     * 5获取房间的事件
+     *
+     * @param roomId
+     * @param eventId
+     * @param callBack
+     */
+    public void roomIdAndEventIdByRoomEvent(String roomId, String eventId, ICallBack callBack) {
+        //GET
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/event/" + eventId + "?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+    }
 
+
+    public void roomIdAndEventTypeAndStateKeyByRoomEvent(String roomId, String eventType, String stateKey, ICallBack callBack) {
+        //GET /_matrix/client/r0/rooms/{roomId}/state/{eventType}/{stateKey}
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state/" + eventType + "/" + stateKey + "?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+    }
+
+    public void roomIdByRoomStatus(String roomId, ICallBack callBack) {
+
+        //9.5.3   GET /_matrix/client/r0/rooms/{roomId}/state
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+    }
+
+
+    public void roomIdByMembers(String roomId, ICallBack callBack) {
+
+        //9.5.4   GET /_matrix/client/r0/rooms/{roomId}/members
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/members?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+
+    }
+
+    public void roomIdByJoinedMembers(String roomId, ICallBack callBack) {
+
+        //5.5   GET /_matrix/client/r0/rooms/{roomId}/joined_members
+
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/joined_members?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+
+    }
+
+    public void roomIdByMessage(String roomId, ICallBack callBack) {
+        //9.5.6   GET /_matrix/client/r0/rooms/{roomId}/messages
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/messages?access_token=" + Modules.getDataModule().getAccessToken();
+        Modules.getRequestModule().get(null, url, callBack);
+    }
 }

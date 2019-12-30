@@ -36,7 +36,7 @@ public class rooms {
                 MatrixRoom room = new MatrixRoom();
                 room.setRoomId(roomId);
                 room.setHomeServer(Modules.getDataModule().getHomeServer());
-                MatrixRoomInjection.provideDataDataSource().insert();
+                MatrixRoomInjection.provideDataDataSource().insert(room);
 
 
                 JSONObject jsonObject = join.getJSONObject(roomId);
@@ -51,6 +51,14 @@ public class rooms {
 
                 // 遍历事件
                 for (int i = 0; i < events.length(); i++) {
+
+
+                    MatrixMessage matrixMessage = new MatrixMessage();
+                    matrixMessage.setDate(System.currentTimeMillis());
+                    matrixMessage.setRoomId(roomId);
+                    matrixMessage.setHomeServer(Modules.getDataModule().getHomeServer());
+
+
                     JSONObject jsonObject1 = events.getJSONObject(i);
                     String type = jsonObject1.getString("type");
                     String sender = jsonObject1.getString("sender");
@@ -62,12 +70,8 @@ public class rooms {
                     JSONObject unsigned = jsonObject1.getJSONObject("unsigned");
                     int age = unsigned.getInt("age");
                     String event_id = jsonObject1.getString("event_id");
+                    matrixMessage.setEventId(event_id);
 
-
-                    MatrixMessage matrixMessage = new MatrixMessage();
-                    matrixMessage.setDate(System.currentTimeMillis());
-                    matrixMessage.setRoomId(roomId);
-                    matrixMessage.setHomeServer(Modules.getDataModule().getHomeServer());
 
                     // 时间
                     matrixMessage.setOriginServerTs(origin_server_ts);
@@ -170,6 +174,8 @@ public class rooms {
 
 
                     } else if ("m.room.create".equals(type)) {
+
+                        //
 
                         // 房间版本号
                         String room_version = content.getString("room_version");

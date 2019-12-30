@@ -16,9 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * IMatrix 接口实现
+ */
 public class MatrixImpl implements IMatrix {
-
-
     private static final String TAG = "MatrixImpl";
 
 
@@ -41,6 +42,11 @@ public class MatrixImpl implements IMatrix {
     @Override
     public String getHomeServer() {
         return homeServer;
+    }
+
+    @Override
+    public void getVersion(ICallBack iCallBack) {
+
     }
 
     @Override
@@ -84,9 +90,7 @@ public class MatrixImpl implements IMatrix {
         return null;
     }
 
-
     private List<Map<String, String>> directs = new ArrayList<>();
-
 
     @Override
     public List<Map<String, String>> direct() {
@@ -95,17 +99,13 @@ public class MatrixImpl implements IMatrix {
 
     @Override
     public void addDirect(Map<String, String> map) {
-
         boolean exists = false;
-
         for (Map<String, String> it : directs) {
             Set<String> keySet = it.keySet();
             Iterator<String> iterator = keySet.iterator();
             while (iterator.hasNext()) {
                 String key = iterator.next();
-
                 Iterator<String> iterator1 = map.keySet().iterator();
-
                 while (iterator1.hasNext()) {
                     String key1 = iterator1.next();
                     if (key.equals(key1)) {
@@ -116,7 +116,6 @@ public class MatrixImpl implements IMatrix {
                 }
             }
         }
-
         if (!exists) {
             directs.add(map);
         }
@@ -133,6 +132,48 @@ public class MatrixImpl implements IMatrix {
         Modules.getMatrixModule().sync(Modules.getDataModule().getAccessToken(), "1", since(), true, "offline", 3000, callBack);
     }
 
+    @Override
+    public void roomIdAndEventIdByRoomEvent(String s, String s1, ICallBack iCallBack) {
+        request.roomIdAndEventIdByRoomEvent(s, s1, iCallBack);
+
+    }
+
+    @Override
+    public void roomIdAndEventTypeAndStateKeyByRoomEvent(String s, String s1, String s2, ICallBack iCallBack) {
+        request.roomIdAndEventTypeAndStateKeyByRoomEvent(s, s1, s2, iCallBack);
+    }
+
+    @Override
+    public void roomIdByRoomStatus(String s, ICallBack iCallBack) {
+        request.roomIdByRoomStatus(s, iCallBack);
+    }
+
+    @Override
+    public void roomIdByMembers(String s, ICallBack iCallBack) {
+        request.roomIdByMembers(s, iCallBack);
+    }
+
+    @Override
+    public void roomIdByJoinedMembers(String s, ICallBack iCallBack) {
+        request.roomIdByJoinedMembers(s, iCallBack);
+    }
+
+
+    @Override
+    public void roomIdByMessage(String s, ICallBack iCallBack) {
+        request.roomIdByMessage(s, iCallBack);
+    }
+
+    /**
+     * 创建房间
+     *
+     * @param s
+     * @param iCallBack
+     */
+    @Override
+    public void createRoom(String s, ICallBack iCallBack) {
+    }
+
     MatrixCallBack callBack = new MatrixCallBack() {
 
         @Override
@@ -142,12 +183,10 @@ public class MatrixImpl implements IMatrix {
             Modules.getLogModule().json(TAG, body);
             try {
                 JSONObject jsonObject = new JSONObject(response.body);
-
                 // 处理数据
                 SyncJsonHandler jsonHandler = new SyncJsonHandler(jsonObject);
                 String next_batch = jsonObject.getString("next_batch");
-                // Modules.getMatrixModule().sync(Modules.getDataModule().getAccessToken(), "1", next_batch, true, "offline", 3000, callBack);
-
+                Modules.getMatrixModule().sync(Modules.getDataModule().getAccessToken(), "1", next_batch, true, "offline", 3000, callBack);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -156,6 +195,7 @@ public class MatrixImpl implements IMatrix {
 
     /**
      * 当前时间格式化
+     * 1_1111_1111_1111
      *
      * @return
      */
@@ -167,6 +207,4 @@ public class MatrixImpl implements IMatrix {
                         timeStr.substring(4, 8) + "_" +
                         timeStr.substring(8, 12);
     }
-
-
 }

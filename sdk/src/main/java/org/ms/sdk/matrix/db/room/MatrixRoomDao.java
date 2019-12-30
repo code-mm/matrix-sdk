@@ -13,6 +13,10 @@ public interface MatrixRoomDao {
     @Query("SELECT * FROM _matrix_room")
     List<MatrixRoom> getRooms();
 
+
+    @Query("SELECT * FROM _matrix_room WHERE _roomid = (:roomId)")
+    MatrixRoom roomIdByRoom(String roomId);
+
     @Insert
     void insert(MatrixRoom... rooms);
 
