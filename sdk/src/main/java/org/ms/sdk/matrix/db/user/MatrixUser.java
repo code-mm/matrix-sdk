@@ -4,9 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "_user")
-public class User {
-    @PrimaryKey
+@Entity(tableName = "_matrix_user")
+public class MatrixUser {
+    @PrimaryKey(autoGenerate = true)
     int _id;
     @ColumnInfo(name = "_username")
     String username;

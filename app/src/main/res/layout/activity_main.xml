@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context="org.ms.sdk.test.matrix.MainActivity">
 
@@ -10,6 +11,29 @@
     <Button
         android:id="@+id/buttonSync"
         android:text="同步"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+
+    <Button
+        android:id="@+id/buttonMessage"
+        android:text="消息"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/buttonRoomList"
+        android:text="房间列表"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/buttonUserInfo"
+        android:text="用户信息"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

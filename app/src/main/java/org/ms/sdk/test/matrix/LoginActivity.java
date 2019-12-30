@@ -2,7 +2,6 @@ package org.ms.sdk.test.matrix;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,15 +9,11 @@ import android.widget.EditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ms.matrix.test.R;
-import org.ms.module.base.view.BaseAppCompatActivity;
-import org.ms.module.dialog.ui.widget.progress.UIProgressDialog;
 import org.ms.module.supper.client.Modules;
 import org.ms.module.supper.inter.net.Response;
-import org.ms.sdk.matrix.Matrix;
 import org.ms.sdk.matrix.MatrixCallBack;
-import org.ms.sdk.matrix.client.MatrixClient;
-import org.ms.sdk.matrix.db.user.User;
-import org.ms.sdk.matrix.inter.IMatrix;
+import org.ms.sdk.matrix.db.user.MatrixUser;
+import org.ms.sdk.matrix.db.user.MatrixUserInjection;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -30,16 +25,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private EditText editTextPassword;
 
 
-    MatrixClient matrixClient;
-    IMatrix matrix;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Modules.getMatrixModule().setHomeServer("https://www.mhw828.com/");
 
-        matrixClient = MatrixClient.Builder.builder().setHomeServer("https://matrix-client.matrix.org/").build();
-        matrix = matrixClient.matrix();
+        Modules.getControlSwitch().setPrintStackTrace(true);
 
 
         buttonLogin = findViewById(R.id.buttonLogin);
@@ -47,7 +39,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         editTextPassword = findViewById(R.id.editTextPassword);
 
         buttonLogin.setOnClickListener(this);
-
 
     }
 
@@ -79,7 +70,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 showDialog();
 
-                matrix.login(username, password, new MatrixCallBack() {
+
+                Modules.getMatrixModule().login(username, password, new MatrixCallBack() {
 
                     @Override
                     public void onSuccess(Object o) {
@@ -103,32 +95,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 Modules.getDataModule().setAccessToken(access_token);
 
 
-                                User user = new User();
-                                user.setUserId(user_id);
-                                user.setUsername(username);
-                                user.setPassword(password);
-                                user.setBaseUrl("https://www.mhw828.com/");
-                                user.setDeviceId(device_id);
-                                user.setHomeServer(home_server);
-
-
+                                MatrixUser matrixUser = new MatrixUser();
+                                matrixUser.setUserId(user_id);
+                                matrixUser.setUsername(username);
+                                matrixUser.setPassword(password);
+                                matrixUser.setBaseUrl("https://www.mhw828.com/");
+                                matrixUser.setDeviceId(device_id);
+                                matrixUser.setHomeServer(home_server);
+                                MatrixUserInjection.provideDataDataSource().insert(matrixUser);
                                 Modules.getUtilsModule().getToastUtils().show("登录成功");
-
-
                                 baseStart(MainActivity.class);
-
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
                         } else if (response.code == 429) {
-
-
                         }
-
-
                     }
 
                     @Override
@@ -141,11 +122,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         Modules.getUtilsModule().getToastUtils().show("onException");
                     }
                 });
-
                 break;
-
-
         }
-
     }
 }

@@ -3,6 +3,7 @@ package org.ms.sdk.matrix;
 import org.json.JSONObject;
 import org.ms.module.supper.client.Modules;
 import org.ms.module.supper.inter.common.CallBack;
+import org.ms.module.supper.inter.common.ICallBack;
 import org.ms.module.supper.inter.module.Module;
 import org.ms.sdk.matrix.MatrixCallBack;
 
@@ -39,7 +40,7 @@ public class MatrixRequest {
      * @param password
      * @param callBack
      */
-    public void login(String username, String password, final MatrixCallBack callBack) {
+    public void login(String username, String password, final ICallBack callBack) {
         Map<String, String> headers = new HashMap<>();
 
         JSONObject obj1 = new JSONObject();
@@ -67,7 +68,7 @@ public class MatrixRequest {
      * @param bodyString {}
      * @param callBack
      */
-    public void userIdFilter(String userId, String bodyString, MatrixCallBack callBack) {
+    public void userIdFilter(String userId, String bodyString, ICallBack callBack) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("Accept", "application/json");
@@ -93,8 +94,11 @@ public class MatrixRequest {
             boolean full_state,
             String set_presence,
             int timeout,
-            MatrixCallBack callBack) {
-        String url = HOME_SERVER + "_matrix/client/r0/sync?filter=" + filter + "&since=" + since + "&full_state=" + full_state + "&set_presence=" + set_presence + "&timeout=" + timeout + "&access_token=" + access_token;
+            ICallBack callBack) {
+        String url = HOME_SERVER + "_matrix/client/r0/sync?access_token=" + access_token + "&filter=" + filter + "&since=" + since + "&full_state=" + full_state + "&set_presence=" + set_presence + "&timeout=" + timeout;
         Modules.getRequestModule().get(null, url, callBack);
     }
+
+
+
 }

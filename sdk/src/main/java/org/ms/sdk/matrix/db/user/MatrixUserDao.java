@@ -8,13 +8,13 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
 @Dao
-public interface UserDao {
-    @Query("SELECT * FROM _user ORDER BY _id DESC LIMIT 1")
-    LiveData<User> getLast();
+public interface MatrixUserDao {
+    @Query("SELECT * FROM _matrix_user ORDER BY _id DESC LIMIT 1")
+    LiveData<MatrixUser> getLast();
 
     @Insert
-    void insert(User... users);
+    void insert(MatrixUser... matrixUsers);
 
     @Delete
-    void delete(User... users);
+    void delete(MatrixUser... matrixUsers);
 }
