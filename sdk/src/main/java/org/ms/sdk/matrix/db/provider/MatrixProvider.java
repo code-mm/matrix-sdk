@@ -15,8 +15,8 @@ import org.ms.module.supper.inter.module.Module;
 public class MatrixProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
-        if (Modules.getDataModule().getApplication() == null) {
-            Modules.getDataModule().setApplication((Application) this.getContext().getApplicationContext());
+        if (Modules.getDataModule().getAppData().getApplication() == null) {
+            Modules.getDataModule().getAppData().setApplication((Application) this.getContext().getApplicationContext());
         }
 
         return false;

@@ -7,8 +7,11 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONObject;
 import org.ms.matrix.test.R;
 import org.ms.module.supper.client.Modules;
+import org.ms.module.supper.inter.net.Response;
+import org.ms.sdk.matrix.MatrixCallBack;
 import org.ms.sdk.matrix.db.message.MatrixMessage;
 import org.ms.sdk.matrix.db.message.MatrixMessageInjection;
 import org.ms.sdk.matrix.db.room.MatrixRoom;
@@ -34,6 +37,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         Modules.getControlSwitch().setRequestLog(true);
         Modules.getControlSwitch().setLogOut(true);
+
     }
 
     @Override
@@ -65,9 +69,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonSync:
-
-                // 开始同步
-                Modules.getMatrixModule().startSync();
 
                 break;
 
@@ -116,4 +117,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+    /**
+     * 当前时间格式化
+     * 1_1111_1111_1111
+     *
+     * @return
+     */
+    public String since() {
+        String timeStr = System.currentTimeMillis() + "";
+        return
+                "s" + timeStr.substring(0, 1) + "_" +
+                        timeStr.substring(1, 4) + "_" +
+                        timeStr.substring(4, 8) + "_" +
+                        timeStr.substring(8, 12);
+    }
+
 }

@@ -32,20 +32,26 @@ public class LocalMatrixMessageDataSource implements MatrixMessageDataSource {
             @Override
             public void run() {
 
-                for(MatrixMessage it : matrixMessages)
-                {
+                for (MatrixMessage it : matrixMessages) {
 
-                    if(eventIdByMessage(it.eventId)==null){
-                        Modules.getLogModule().e(TAG,"消息不存在，存入"+it.eventId);
-                        matrixMessageDao.insert(matrixMessages);
-                    }else
-                    {
-                        Modules.getLogModule().e(TAG,"消息已存在，");
+                    if (it != null) {
+
+                        if (eventIdByMessage(it.eventId) == null) {
+                            Modules.getLogModule().e(TAG, "消息不存在，存入" + it.eventId);
+                            matrixMessageDao.insert(matrixMessages);
+                        } else {
+                            Modules.getLogModule().e(TAG, "消息已存在，" + it.getMessage());
+
+                        }
+                    } else {
+                        Modules.getLogModule().e(TAG, "消息为NULL，");
                     }
+
                 }
             }
         });
     }
+
     @Override
     public void delete(MatrixMessage... matrixMessages) {
         Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {

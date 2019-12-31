@@ -1,5 +1,7 @@
 package org.ms.sdk.matrix.db.room;
 
+import android.arch.lifecycle.LiveData;
+
 import org.ms.module.supper.client.Modules;
 
 import java.util.List;
@@ -19,6 +21,11 @@ public class LocalMatrixRoomDataSource implements MatrixRoomDataSource {
     @Override
     public List<MatrixRoom> getRooms() {
         return matrixRoomDao.getRooms();
+    }
+
+    @Override
+    public LiveData<MatrixRoom> getLast() {
+        return matrixRoomDao.getLast();
     }
 
     @Override

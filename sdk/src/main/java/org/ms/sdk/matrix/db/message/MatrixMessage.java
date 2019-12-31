@@ -10,11 +10,8 @@ public class MatrixMessage {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     int id;
-
-
     @ColumnInfo(name = "_roomid")
     String roomId;
-
     @ColumnInfo(name = "_message")
     String message;
     @ColumnInfo(name = "_message_type")

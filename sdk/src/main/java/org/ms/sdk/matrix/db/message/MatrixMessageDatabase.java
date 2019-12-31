@@ -17,7 +17,7 @@ public abstract class MatrixMessageDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (MatrixMessageDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(Modules.getDataModule().getApplication(),
+                    INSTANCE = Room.databaseBuilder(Modules.getDataModule().getAppData().getApplication(),
                             MatrixMessageDatabase.class, "_matrix_message.db")
                             .build();
                 }

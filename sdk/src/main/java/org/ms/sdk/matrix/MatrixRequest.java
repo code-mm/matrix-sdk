@@ -105,21 +105,21 @@ public class MatrixRequest {
      */
     public void roomIdAndEventIdByRoomEvent(String roomId, String eventId, ICallBack callBack) {
         //GET
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/event/" + eventId + "?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/event/" + eventId + "?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
     }
 
 
     public void roomIdAndEventTypeAndStateKeyByRoomEvent(String roomId, String eventType, String stateKey, ICallBack callBack) {
         //GET /_matrix/client/r0/rooms/{roomId}/state/{eventType}/{stateKey}
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state/" + eventType + "/" + stateKey + "?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state/" + eventType + "/" + stateKey + "?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
     }
 
     public void roomIdByRoomStatus(String roomId, ICallBack callBack) {
 
         //9.5.3   GET /_matrix/client/r0/rooms/{roomId}/state
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/state?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
     }
 
@@ -127,7 +127,7 @@ public class MatrixRequest {
     public void roomIdByMembers(String roomId, ICallBack callBack) {
 
         //9.5.4   GET /_matrix/client/r0/rooms/{roomId}/members
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/members?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/members?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
 
     }
@@ -136,14 +136,14 @@ public class MatrixRequest {
 
         //5.5   GET /_matrix/client/r0/rooms/{roomId}/joined_members
 
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/joined_members?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/joined_members?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
 
     }
 
     public void roomIdByMessage(String roomId, ICallBack callBack) {
         //9.5.6   GET /_matrix/client/r0/rooms/{roomId}/messages
-        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/messages?access_token=" + Modules.getDataModule().getAccessToken();
+        String url = HOME_SERVER + "_matrix/client/r0/rooms/" + roomId + "/messages?access_token=" + Modules.getDataModule().getMatrixData().getAccessToken();
         Modules.getRequestModule().get(null, url, callBack);
     }
 }
