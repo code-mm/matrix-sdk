@@ -7,4 +7,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextInputLayoutHintStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/TextInputLayoutHintColor</item>
+    </style>
+
+    <!--改变TextInputLayout 里面的EditText默认下划线和点击时下划线的颜色-->
+    <style name="TextInputLayoutAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">@color/TextInputLayoutHintColor</item><!--默认显示下划线的颜色-->
+        <item name="colorControlActivated">@color/TextInputLayoutHintColor</item><!--点击后下划线的颜色-->
+        <item name="colorAccent">@color/TextInputLayoutHintColor</item>
+    </style>
 </resources>
