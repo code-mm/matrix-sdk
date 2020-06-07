@@ -6,6 +6,8 @@ import org.ms.matrix.sdk.model.LoginResultModel;
 import org.ms.matrix.sdk.model.RegisteredModel;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
 
+import java.util.List;
+
 public interface IUser {
 
 
@@ -14,7 +16,7 @@ public interface IUser {
      * @param callBack
      */
 
-    void login(LoginModel loginModel, MatrixCallBack<LoginResultModel,Throwable> callBack);
+    void login(LoginModel loginModel, MatrixCallBack<LoginResultModel, Throwable> callBack);
 
 
     /**
@@ -24,6 +26,9 @@ public interface IUser {
      * @param callBack
      */
     void registered(RegisteredModel registeredModel, MatrixCallBack callBack);
+
+
+    void getRoomList(MatrixCallBack<List<String>,Throwable> callBack);
 
 
 }

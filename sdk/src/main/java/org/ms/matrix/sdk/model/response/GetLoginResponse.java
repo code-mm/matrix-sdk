@@ -1,4 +1,4 @@
-package org.ms.matrix.sdk.model;
+package org.ms.matrix.sdk.model.response;
 
 import java.util.List;
 

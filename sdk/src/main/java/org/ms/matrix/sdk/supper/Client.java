@@ -2,6 +2,8 @@ package org.ms.matrix.sdk.supper;
 
 import org.ms.matrix.sdk.supper.inter.config.IConfig;
 import org.ms.matrix.sdk.supper.inter.config.IConfigAdapter;
+import org.ms.matrix.sdk.supper.inter.data.IData;
+import org.ms.matrix.sdk.supper.inter.data.IDataAdapter;
 import org.ms.matrix.sdk.supper.inter.user.IUser;
 import org.ms.matrix.sdk.supper.inter.user.IUserAdapter;
 
@@ -80,4 +82,45 @@ public class Client {
         }
         return user;
     }
+
+
+    private static IData data;
+
+    public static IData getData() {
+
+        if (data == null) {
+            try {
+                Class<?> aClass = Class.forName("org.ms.matrix.sdk.impl.data.DataImpl");
+                if (aClass != null) {
+                    try {
+                        Object o = aClass.newInstance();
+                        if (o != null) {
+                            if (o instanceof IData) {
+                                data = (IData) o;
+
+                                return data;
+                            }
+                        } else {
+                            data = new IDataAdapter();
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        data = new IDataAdapter();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                        data = new IDataAdapter();
+                    }
+                } else {
+                    data = new IDataAdapter();
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+
+                data = new IDataAdapter();
+            }
+        }
+        return data;
+    }
+
+
 }

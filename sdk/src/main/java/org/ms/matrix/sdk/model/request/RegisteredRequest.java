@@ -1,4 +1,4 @@
-package org.ms.matrix.sdk.model;
+package org.ms.matrix.sdk.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
