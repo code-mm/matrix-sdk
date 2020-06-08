@@ -1,4 +1,4 @@
-package org.ms.matrix.app.db;
+package org.ms.matrix.app.db.user;
 
 
 import androidx.room.Dao;

@@ -3,7 +3,7 @@ package org.ms.matrix.app.ui.activity.login;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.ms.matrix.app.db.User;
+import org.ms.matrix.app.db.user.User;
 
 public class LoginActivityViewModel extends ViewModel {
 

@@ -17,7 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.ms.matrix.app.R;
-import org.ms.matrix.app.db.User;
+import org.ms.matrix.app.db.user.User;
 import org.ms.matrix.app.ui.activity.main.MainActivity;
 import org.ms.module.base.view.BaseAppCompatActivity;
 import org.ms.module.base.view.StatusBarUtil;

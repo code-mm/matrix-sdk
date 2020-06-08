@@ -1,6 +1,6 @@
 package org.ms.matrix.app.ui.activity.login;
 
-import org.ms.matrix.app.db.User;
+import org.ms.matrix.app.db.user.User;
 import org.ms.module.base.inter.IView;
 
 public interface ILoginActivity extends IView {

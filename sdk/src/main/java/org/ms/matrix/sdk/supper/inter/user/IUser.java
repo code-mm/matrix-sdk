@@ -1,6 +1,5 @@
 package org.ms.matrix.sdk.supper.inter.user;
 
-import org.ms.matrix.sdk.client.MatrixClient;
 import org.ms.matrix.sdk.model.LoginModel;
 import org.ms.matrix.sdk.model.LoginResultModel;
 import org.ms.matrix.sdk.model.RegisteredModel;
@@ -28,7 +27,7 @@ public interface IUser {
     void registered(RegisteredModel registeredModel, MatrixCallBack callBack);
 
 
-    void getRoomList(MatrixCallBack<List<String>,Throwable> callBack);
+    void getRoomList(MatrixCallBack<List<String>, Throwable> callBack);
 
 
 }

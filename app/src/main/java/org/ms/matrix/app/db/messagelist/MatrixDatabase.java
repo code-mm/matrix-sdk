@@ -1,4 +1,4 @@
-package org.ms.matrix.app.db;
+package org.ms.matrix.app.db.messagelist;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -7,20 +7,20 @@ import androidx.room.RoomDatabase;
 import org.ms.module.supper.client.Modules;
 
 @Database(entities = {
-        User.class
+        MessageList.class
 }, version = 1, exportSchema = false)
-public abstract class UserDataBase extends RoomDatabase {
+public abstract class MatrixDatabase extends RoomDatabase {
 
-    public abstract UserDao userDao();
+    public abstract MessageListDao messageListDao();
 
-    private static volatile UserDataBase INSTANCE;
+    private static volatile MatrixDatabase INSTANCE;
 
-    public static UserDataBase getInstance() {
+    public static MatrixDatabase getInstance() {
         if (INSTANCE == null) {
-            synchronized (UserDataBase.class) {
+            synchronized (MatrixDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(Modules.getDataModule().getAppData().getApplication(),
-                            UserDataBase.class, "com-bdlbsc-matrix-user.db")
+                            MatrixDatabase.class, "matrix.db")
                             .build();
                 }
             }

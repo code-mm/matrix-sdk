@@ -5,6 +5,9 @@ import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * 客房会员
+ */
 public interface RoomMembership {
 
 

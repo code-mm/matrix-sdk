@@ -4,7 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import org.ms.matrix.app.db.User;
+import org.ms.matrix.app.db.user.User;
 import org.ms.module.base.presenter.BasePresenter;
 import org.ms.module.supper.client.Modules;
 

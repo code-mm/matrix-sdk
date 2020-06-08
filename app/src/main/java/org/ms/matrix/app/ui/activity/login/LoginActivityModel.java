@@ -2,8 +2,8 @@ package org.ms.matrix.app.ui.activity.login;
 
 import android.util.Log;
 
-import org.ms.matrix.app.db.User;
-import org.ms.matrix.app.db.UserDbInjection;
+import org.ms.matrix.app.db.user.User;
+import org.ms.matrix.app.db.user.UserDbInjection;
 import org.ms.matrix.sdk.client.MatrixClient;
 import org.ms.matrix.sdk.model.LoginModel;
 import org.ms.matrix.sdk.model.LoginResultModel;

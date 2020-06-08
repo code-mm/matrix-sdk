@@ -19,6 +19,7 @@ public class App extends Application {
         Modules.getLogModule().setAliyunSend(false);
 
         MatrixClient.getInstance().getConfig().setHomeServer("https://matrix.mhw828.com/");
+//        MatrixClient.getInstance().getConfig().setHomeServer("https://matrix-client.matrix.org/");
 
     }
 }
