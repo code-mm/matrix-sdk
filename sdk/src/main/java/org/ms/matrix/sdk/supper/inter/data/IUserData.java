@@ -9,4 +9,14 @@ public interface IUserData {
     String getAccessToken();
 
 
+    void setUserId(String userId);
+
+    String getUserId();
+
+
+    void setDeviceId(String deviceId);
+
+    String getDeviceId();
+
+
 }

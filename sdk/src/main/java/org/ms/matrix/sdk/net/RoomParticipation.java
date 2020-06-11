@@ -16,15 +16,6 @@ import retrofit2.http.Query;
 public interface RoomParticipation {
 
 
-    /**
-     * 获取此房间的 m.room.member 事件
-     *
-     * @param roomId
-     * @param access_token
-     * @return
-     */
-    @GET("_matrix/client/r0/rooms/{roomId}/members")
-    Single<ResponseBody> _matrix_client_r0_rooms_roomId_members(@Path("roomId") String roomId, @Query("access_token") String access_token);
 
     /**
      * 获取此房间的事件列表
@@ -52,6 +43,27 @@ public interface RoomParticipation {
 
     @GET("_matrix/client/r0/sync")
     Single<ResponseBody> _matrix_client_v0_sync(@Query("since") String since, @Query("access_token") String access_token);
+
+
+    /**
+     * 获取当前加入房间的用户及其个人资料的列表
+     * @param roomId
+     * @param access_token
+     * @return
+     */
+    @GET("_matrix/client/r0/rooms/{roomId}/joined_members")
+    Single<ResponseBody> _matrix_client_r0_rooms_roomId_joined_members(@Path("roomId") String roomId, @Query("access_token") String access_token);
+
+
+    /**
+     * 获取此房间的 m.room.member 事件
+     *
+     * @param roomId
+     * @param access_token
+     * @return
+     */
+    @GET("_matrix/client/r0/rooms/{roomId}/members")
+    Single<ResponseBody> _matrix_client_r0_rooms_roomId_members(@Path("roomId") String roomId, @Query("access_token") String access_token);
 
 
 }

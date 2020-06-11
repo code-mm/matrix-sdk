@@ -1,17 +1,23 @@
-package org.ms.matrix.app.db.messagelist;
+package org.ms.matrix.app.db;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import org.ms.matrix.app.db.matrixroom.MatrixRoom;
+import org.ms.matrix.app.db.matrixroom.MatrixRoomDao;
+import org.ms.matrix.app.db.messagelist.Event;
+import org.ms.matrix.app.db.messagelist.EventDao;
 import org.ms.module.supper.client.Modules;
 
 @Database(entities = {
-        MessageList.class
+        Event.class,
+        MatrixRoom.class
 }, version = 1, exportSchema = false)
 public abstract class MatrixDatabase extends RoomDatabase {
 
-    public abstract MessageListDao messageListDao();
+    public abstract EventDao messageListDao();
+    public abstract MatrixRoomDao matrixRoomDao();
 
     private static volatile MatrixDatabase INSTANCE;
 

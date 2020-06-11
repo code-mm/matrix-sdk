@@ -6,6 +6,11 @@ import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
 public interface IRooms {
 
 
+    /**
+     * 开始同步
+     *
+     * @param syncModel
+     */
     void synn(SyncModel syncModel);
 
 

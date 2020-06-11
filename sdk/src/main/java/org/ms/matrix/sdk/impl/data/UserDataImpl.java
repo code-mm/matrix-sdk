@@ -1,7 +1,6 @@
 package org.ms.matrix.sdk.impl.data;
 
 import org.ms.matrix.sdk.supper.inter.data.IUserData;
-import org.ms.matrix.sdk.supper.inter.user.IUser;
 
 public class UserDataImpl implements IUserData {
 
@@ -21,5 +20,31 @@ public class UserDataImpl implements IUserData {
     @Override
     public String getAccessToken() {
         return accessToken;
+    }
+
+
+    private String userId;
+
+    @Override
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String getUserId() {
+        return userId;
+    }
+
+
+    private String deviceId;
+
+    @Override
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    @Override
+    public String getDeviceId() {
+        return deviceId;
     }
 }

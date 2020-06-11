@@ -39,9 +39,24 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'com.google.android.material:material:1.2.0-alpha06'
+
+
     implementation 'org.ms:androidx-sdk-module-supper:latest'
 
+    implementation "org.ms:androidx-sdk-view-natigation:latest"
+
+
+
     implementation project(':sdk')
+}
+
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
 
 

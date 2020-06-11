@@ -4,8 +4,21 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "_message_list" )
-public class MessageList {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+
+@Entity(tableName = "_event_list")
+public class Event {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")

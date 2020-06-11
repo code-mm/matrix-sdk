@@ -1,16 +1,11 @@
 package org.ms.matrix.sdk.supper.inter.room;
 
 import org.ms.matrix.sdk.model.MessageModel;
+import org.ms.matrix.sdk.model.RoomJoinedUserInfo;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
 
-public class IRoomAdapter implements IRoom {
-    @Override
-    public String getRoomId() {
-        return null;
-    }
+import java.util.List;
 
-    @Override
-    public void send(MessageModel messageModel, MatrixCallBack callBack) {
+public abstract class IRoomAdapter implements IRoom {
 
-    }
 }
