@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class m_room_canonical_alias implements IEvent {
+public class m_room_canonical_alias extends BaseEvent {
 
     private String type;
 

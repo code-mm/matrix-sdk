@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_text implements IEvent {
+public class m_text  extends BaseContent{
 
-    private String type;
-    private String event_id;
     private String msgtype;
     private String body;
-    private String sender;
-    private Unsigned unsigned;
+    private String format;
+    private String formatted_body;
 
 
 }

@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_room_power_levels implements IEvent {
+public class m_room_power_levels extends BaseEvent {
     private String type;
 }

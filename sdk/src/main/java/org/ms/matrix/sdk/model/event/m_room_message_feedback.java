@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_room_message_feedback implements IEvent {
+public class m_room_message_feedback extends BaseEvent {
     private String type;
 }

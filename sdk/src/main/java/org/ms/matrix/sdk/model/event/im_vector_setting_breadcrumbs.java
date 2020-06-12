@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class im_vector_setting_breadcrumbs implements IEvent {
+public class im_vector_setting_breadcrumbs extends BaseEvent {
     private String type;
     private Content content;
 

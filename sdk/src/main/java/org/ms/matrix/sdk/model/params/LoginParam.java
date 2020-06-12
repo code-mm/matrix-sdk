@@ -1,4 +1,6 @@
-package org.ms.matrix.sdk.model;
+package org.ms.matrix.sdk.model.params;
+
+import org.ms.matrix.sdk.model.IModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +11,15 @@ import lombok.NoArgsConstructor;
 
 /**
  * 登录请求参数
+ *
+ * 此包 为对外使用请求参数
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class LoginModel extends IModel {
+public class LoginParam extends IParam {
 
     private String user;
     private String password;

@@ -1,5 +1,7 @@
 package org.ms.matrix.sdk.model.event;
 
+import org.ms.module.supper.client.Modules;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,4 +15,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class Unsigned {
     private int age;
+
+
+    public String toJson() {
+        return Modules.getUtilsModule().getGsonUtils().toJson(this);
+    }
+
+
 }

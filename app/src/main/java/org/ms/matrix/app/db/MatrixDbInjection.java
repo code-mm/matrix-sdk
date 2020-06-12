@@ -1,8 +1,9 @@
 package org.ms.matrix.app.db;
 
 import org.ms.matrix.app.db.matrixroom.MatrixRoomLocalDataSource;
-import org.ms.matrix.app.db.messagelist.EventDataSource;
-import org.ms.matrix.app.db.messagelist.EventLocalDataSource;
+import org.ms.matrix.app.db.event.EventDataSource;
+import org.ms.matrix.app.db.event.EventLocalDataSource;
+import org.ms.matrix.sdk.supper.Client;
 
 public class MatrixDbInjection {
 

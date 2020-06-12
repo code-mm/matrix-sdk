@@ -15,4 +15,8 @@ public class m_call_answer implements IEvent {
 
     private String type;
 
+    @Override
+    public String toJson() {
+        return null;
+    }
 }

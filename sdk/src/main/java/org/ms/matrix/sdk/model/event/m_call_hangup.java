@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_call_hangup implements IEvent {
-
+public class m_call_hangup extends BaseEvent {
 
     private String type;
 

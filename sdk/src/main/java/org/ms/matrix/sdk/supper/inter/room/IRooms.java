@@ -1,6 +1,6 @@
 package org.ms.matrix.sdk.supper.inter.room;
 
-import org.ms.matrix.sdk.model.SyncModel;
+import org.ms.matrix.sdk.model.request.SyncRequest;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
 
 public interface IRooms {
@@ -9,9 +9,9 @@ public interface IRooms {
     /**
      * 开始同步
      *
-     * @param syncModel
+     * @param syncRequest
      */
-    void synn(SyncModel syncModel);
+    void synn(SyncRequest syncRequest);
 
 
     void getRoom(String roomId, MatrixCallBack<IRoom, Throwable> callBack);

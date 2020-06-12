@@ -6,7 +6,6 @@ import java.util.List;
 
 public class LocalUserDataSource implements UserDataSource {
 
-
     UserDao userDao;
 
     public LocalUserDataSource(UserDao userDao) {
@@ -24,15 +23,25 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
+    public User queryUserByUserId(String userId) {
+        return userDao.queryUserByUserId(userId);
+    }
+
+    @Override
     public void insert(User... users) {
 
         Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {
             @Override
             public void run() {
-                userDao.insert(users);
+                for (User user : users) {
+                    if (userDao.queryUserByUserId(user._user_id) == null) {
+                        userDao.insert(user);
+                    } else {
+                        userDao.update(user);
+                    }
+                }
             }
         });
-
     }
 
     @Override
@@ -48,8 +57,6 @@ public class LocalUserDataSource implements UserDataSource {
 
     @Override
     public void update(User... users) {
-
-
         Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {
             @Override
             public void run() {

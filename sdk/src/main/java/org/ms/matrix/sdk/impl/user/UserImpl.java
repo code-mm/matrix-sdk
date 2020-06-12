@@ -2,9 +2,11 @@ package org.ms.matrix.sdk.impl.user;
 
 import android.util.Log;
 
-import org.ms.matrix.sdk.model.LoginModel;
+
+import org.ms.matrix.sdk.exception.MatrixException;
+import org.ms.matrix.sdk.model.params.LoginParam;
 import org.ms.matrix.sdk.model.LoginResultModel;
-import org.ms.matrix.sdk.model.RegisteredModel;
+import org.ms.matrix.sdk.model.params.RegisteredParam;
 import org.ms.matrix.sdk.model.response.RoomsResponse;
 import org.ms.matrix.sdk.net.RoomMembership;
 import org.ms.matrix.sdk.net.SessionManagement;
@@ -30,17 +32,48 @@ public class UserImpl extends IUserAdapter {
 
     private static final String TAG = "UserImpl";
 
-    SessionManagement sessionManagement = RetrofitUtils.getInstance().getRetrofitClient(Client.getConfig().getHomeServer()).create(SessionManagement.class);
-    RoomMembership roomMembership = RetrofitUtils.getInstance().getRetrofitClient(Client.getConfig().getHomeServer()).create(RoomMembership.class);
+    SessionManagement sessionManagement;
+    RoomMembership roomMembership;
+
+
+    private void checkServer() throws MatrixException {
+
+        if (Client.getConfig().getHomeServer() == null || "".equals(Client.getConfig().getHomeServer())) {
+            throw new MatrixException("未配置服务器");
+        }
+
+        if (sessionManagement == null) {
+            sessionManagement = RetrofitUtils.getInstance().getRetrofitClient(Client.getConfig().getHomeServer()).create(SessionManagement.class);
+        }
+
+        if (roomMembership == null) {
+            roomMembership = RetrofitUtils.getInstance().getRetrofitClient(Client.getConfig().getHomeServer()).create(RoomMembership.class);
+        }
+
+        if (sessionManagement == null) {
+            throw new MatrixException("未配置服务器");
+        }
+
+        if (roomMembership == null) {
+            throw new MatrixException("未配置服务器");
+        }
+
+    }
 
 
     @Override
-    public void login(LoginModel loginModel, final MatrixCallBack<LoginResultModel, Throwable> callBack) {
+    public void login(LoginParam loginParam, final MatrixCallBack<LoginResultModel, Throwable> callBack) {
 
 
-        Log.e(TAG, "login: " + loginModel.toJson());
+        try {
+            checkServer();
+        } catch (MatrixException e) {
+            e.printStackTrace();
+        }
 
-        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), loginModel.toJson());
+        Log.e(TAG, "login: " + loginParam.toJson());
+
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), loginParam.toJson());
 
         sessionManagement._matrix_client_r0_login(requestBody)
                 .subscribeOn(Schedulers.io())
@@ -89,12 +122,26 @@ public class UserImpl extends IUserAdapter {
 
 
     @Override
-    public void registered(RegisteredModel registeredModel, MatrixCallBack callBack) {
+    public void registered(RegisteredParam registeredParam, MatrixCallBack callBack) {
+
+
+        try {
+            checkServer();
+        } catch (MatrixException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public void getRoomList(final MatrixCallBack<List<String>, Throwable> callBack) {
+
+        try {
+            checkServer();
+        } catch (MatrixException e) {
+            e.printStackTrace();
+        }
+
         roomMembership._matrix_client_r0_joined_rooms(Client.getData().getUserData().getAccessToken())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

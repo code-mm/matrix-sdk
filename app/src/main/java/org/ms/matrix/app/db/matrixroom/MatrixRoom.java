@@ -36,6 +36,4 @@ public class MatrixRoom {
     // 存入时间戳
     @ColumnInfo(name = "_timestamp")
     public long _timestamp;
-
-
 }

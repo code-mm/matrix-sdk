@@ -3,20 +3,24 @@ package org.ms.matrix.sdk.impl.room;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ms.matrix.sdk.model.rooms.Candidates;
-import org.ms.matrix.sdk.model.rooms.Content;
-import org.ms.matrix.sdk.model.rooms.Event;
-import org.ms.matrix.sdk.model.rooms.Offer;
-import org.ms.matrix.sdk.model.SyncModel;
-import org.ms.matrix.sdk.model.rooms.Unsigned;
+
+import org.ms.matrix.sdk.model.event.Unsigned;
+import org.ms.matrix.sdk.model.event.m_audio;
+import org.ms.matrix.sdk.model.event.m_call_candidates;
+import org.ms.matrix.sdk.model.event.m_call_invite;
+import org.ms.matrix.sdk.model.event.m_image;
+import org.ms.matrix.sdk.model.event.m_room_message;
+import org.ms.matrix.sdk.model.event.m_text;
+import org.ms.matrix.sdk.model.event.m_video;
+import org.ms.matrix.sdk.model.request.SyncRequest;
+
 import org.ms.matrix.sdk.net.RoomParticipation;
 import org.ms.matrix.sdk.supper.Client;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
+import org.ms.matrix.sdk.supper.inter.listener.MatrixListener;
 import org.ms.matrix.sdk.supper.inter.room.IRoom;
 import org.ms.matrix.sdk.supper.inter.room.IRoomsAdapter;
 import org.ms.matrix.sdk.utils.RetrofitUtils;
@@ -65,10 +69,9 @@ public class RoomsImpl extends IRoomsAdapter {
     }
 
     @Override
-    public void synn(final SyncModel syncModel) {
+    public void synn(final SyncRequest syncRequest) {
 
-
-        roomParticipation._matrix_client_v0_sync(syncModel.getSince(), Client.getData().getUserData().getAccessToken())
+        roomParticipation._matrix_client_v0_sync(syncRequest.getSince(), Client.getData().getUserData().getAccessToken())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new SingleObserver<ResponseBody>() {
                     @Override
@@ -82,9 +85,9 @@ public class RoomsImpl extends IRoomsAdapter {
                             String body = responseBody.string();
 
                             Modules.getLogModule().json(TAG, body);
-
+                            JSONObject jsonObject = null;
                             try {
-                                JSONObject jsonObject = new JSONObject(body);
+                                jsonObject = new JSONObject(body);
 
                                 JSONObject account_data = jsonObject.getJSONObject("account_data");
                                 account_data(account_data);
@@ -107,13 +110,23 @@ public class RoomsImpl extends IRoomsAdapter {
                                 JSONObject device_one_time_keys_count = jsonObject.getJSONObject("device_one_time_keys_count");
                                 device_one_time_keys_count(device_one_time_keys_count);
 
-                                String next_batch = jsonObject.getString("next_batch");
-                                Log.e(TAG, "onSuccess next_batch : " + next_batch);
-                                syncModel.setSince(next_batch);
-                                SystemClock.sleep(1000);
-                                synn(syncModel);
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }
+
+
+                            if (jsonObject != null) {
+                                String next_batch = null;
+                                try {
+                                    next_batch = jsonObject.getString("next_batch");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.e(TAG, "onSuccess next_batch : " + next_batch);
+                                syncRequest.setSince(next_batch);
+                                SystemClock.sleep(1000);
+                                synn(syncRequest);
                             }
 
                             Log.e(TAG, "onSuccess: " + body);
@@ -161,140 +174,304 @@ public class RoomsImpl extends IRoomsAdapter {
     private void account_data(JSONObject account_data) throws JSONException {
         JSONArray account_data_events = account_data.getJSONArray("events");
 
-        for (int i = 0; i < account_data.length(); i++) {
 
-            JSONObject eventJSONObject = new JSONObject(account_data_events.get(i).toString());
-            String type = eventJSONObject.getString("type");
+        if (account_data_events.length() > 0)
 
-            if ("m.direct".equals(type)) {
+            for (int i = 0; i < account_data.length(); i++) {
 
-            } else if ("im.vector.setting.breadcrumbs".equals(type)) {
+                JSONObject eventJSONObject = new JSONObject(account_data_events.get(i).toString());
+                String type = eventJSONObject.getString("type");
 
-            } else if ("m.push_rules".equals(type)) {
+                if ("m.direct".equals(type)) {
 
+                } else if ("im.vector.setting.breadcrumbs".equals(type)) {
+
+                } else if ("m.push_rules".equals(type)) {
+
+                }
             }
-        }
     }
 
     private void rooms(JSONObject rooms) throws JSONException {
         JSONObject join = rooms.getJSONObject("join");
+        rooms_join(join);
+        JSONObject invite = rooms.getJSONObject("invite");
+        rooms_invite(invite);
+        JSONObject leave = rooms.getJSONObject("leave");
+        rooms_leave(leave);
 
+    }
+
+    private void rooms_invite(JSONObject invite) {
+
+
+    }
+
+    private void rooms_leave(JSONObject leave) {
+
+    }
+
+    private void rooms_join(JSONObject join) throws JSONException {
         Iterator<String> keys = join.keys();
 
         while (keys.hasNext()) {
             // 此节点为房间ID
-            String next = keys.next();
-
+            String roomId = keys.next();
 
             // 获取房间里面的内容
-            JSONObject roomContent = join.getJSONObject(next);
+            JSONObject roomContent = join.getJSONObject(roomId);
             JSONObject timeline = roomContent.getJSONObject("timeline");
-
-            JSONArray events = timeline.getJSONArray("events");
-
-            for (int i = 0; i < events.length(); i++) {
-
-                Event.EventBuilder eventBuilder = Event.builder();
-
-                eventBuilder.roomId(next);
+            rooms_join_timeline(timeline, roomId);
 
 
-                JSONObject event = events.getJSONObject(i);
-                // 事件类型
-                String type = event.getString("type");
-
-                eventBuilder.type(type);
-
-                // 发送者
-                String sender = event.getString("sender");
-
-                eventBuilder.sender(sender);
+            JSONObject state = roomContent.getJSONObject("state");
+            rooms_join_state(state, roomId);
 
 
-                // 内容
-                JSONObject content = event.getJSONObject("content");
+            JSONObject account_data = roomContent.getJSONObject("account_data");
+            rooms_join_account_data(account_data, roomId);
+
+            JSONObject ephemeral = roomContent.getJSONObject("ephemeral");
+            rooms_join_ephemeral(ephemeral, roomId);
+
+            JSONObject unread_notifications = roomContent.getJSONObject("unread_notifications");
+            rooms_join_unread_notifications(unread_notifications, roomId);
+
+            JSONObject summary = roomContent.getJSONObject("summary");
+            rooms_join_summary(summary, roomId);
 
 
-                // 语音通话
-                if ("m.call.invite".equals(type)) {
+        }
+    }
 
-                    // 版本
-                    int version = content.getInt("version");
-                    // callid
-                    String call_id = content.getString("call_id");
-
-                    int lifetime = content.getInt("lifetime");
-
-                    JSONObject offer = content.getJSONObject("offer");
-
-                    //sdp
-                    String sdp = offer.getString("sdp");
-
-                    // type offer
-                    String type1 = offer.getString("type");
+    private void rooms_join_summary(JSONObject summary, String roomId) {
 
 
-                    eventBuilder.content(Content.builder().version(version).call_id(call_id).lifetime(lifetime).offer(Offer.builder().sdp(sdp).type(type1).build()).build());
+    }
+
+    private void rooms_join_unread_notifications(JSONObject unread_notifications, String roomId) {
+    }
+
+    private void rooms_join_ephemeral(JSONObject ephemeral, String roomId) {
 
 
-                    // 文字消息
-                } else if ("m.room.message".equals(type)) {
+    }
 
-                    // 消息类型
-                    String msgtype = content.getString("msgtype");
+    private void rooms_join_account_data(JSONObject account_data, String roomId) {
 
+    }
+
+    private void rooms_join_state(JSONObject state, String roomId) {
+
+    }
+
+    private void rooms_join_timeline(JSONObject timeline, String roomId) throws JSONException {
+
+        boolean limited = timeline.getBoolean("limited");
+        String prev_batch = timeline.getString("prev_batch");
+        JSONArray events = timeline.getJSONArray("events");
+
+        for (int i = 0; i < events.length(); i++) {
+
+
+            JSONObject event = events.getJSONObject(i);
+            // 事件类型
+            String type = event.getString("type");
+            // 发送者
+            String sender = event.getString("sender");
+            // 内容
+            JSONObject content = event.getJSONObject("content");
+            long origin_server_ts = event.getLong("origin_server_ts");
+            JSONObject unsigned = event.getJSONObject("unsigned");
+            int age = unsigned.getInt("age");
+            // 事件ID
+            String event_id = event.getString("event_id");
+
+            // 语音通话
+            if ("m.call.invite".equals(type)) {
+
+                // 版本
+                int version = content.getInt("version");
+                // callid
+                String call_id = content.getString("call_id");
+
+                int lifetime = content.getInt("lifetime");
+
+                JSONObject offer = content.getJSONObject("offer");
+
+                //sdp
+                String sdp = offer.getString("sdp");
+
+                // type offer
+                String type1 = offer.getString("type");
+
+                m_call_invite invite =
+                        m_call_invite
+                                .builder()
+                                .room_id(roomId)
+                                .type(type)
+                                .sender(sender)
+                                .origin_server_ts(origin_server_ts)
+                                .event_id(event_id)
+                                .unsigned(Unsigned
+                                        .builder()
+                                        .age(age)
+                                        .build())
+                                .content(m_call_invite.Invtie
+                                        .builder()
+                                        .call_id(call_id)
+                                        .version(version)
+                                        .lifetime(lifetime)
+                                        .offer(m_call_invite.Invtie.Offer
+                                                .builder()
+                                                .sdp(sdp)
+                                                .type(type1)
+                                                .build())
+                                        .build())
+                                .build();
+
+                Client.onCallBackEvent(invite);
+
+
+                // 消息
+            } else if ("m.room.message".equals(type)) {
+                // 消息类型
+                String msgtype = content.getString("msgtype");
+                String body = content.getString("body");
+                // 文字消息
+                if ("m.text".equals(msgtype)) {
                     // 消息内容
-                    String body1 = content.getString("body");
 
-                    eventBuilder.content(Content.builder().body(body1).msgtype(msgtype).build());
+                    m_room_message<m_text> m_textm_room_message = new m_room_message<m_text>();
+                    m_textm_room_message.setRoom_id(roomId);
+                    m_textm_room_message.setEvent_id(event_id);
+                    m_textm_room_message.setSender(sender);
+                    m_textm_room_message.setOrigin_server_ts(origin_server_ts);
+                    m_textm_room_message.setContent(m_text.builder().body(body).msgtype(msgtype).build());
+                    m_textm_room_message.setUnsigned(Unsigned.builder().age(age).build());
+                    m_textm_room_message.setType(type);
+                    Client.onCallBackEvent(m_textm_room_message);
+
+                } else if ("m.emote".equals(msgtype)) {
+
+                } else if ("m.notice".equals(msgtype)) {
+
+                } else if ("m.image".equals(msgtype)) {
+
+                    JSONObject info = content.getJSONObject("info");
+                    int w = info.getInt("w");
+                    int h = info.getInt("h");
+                    int size = info.getInt("size");
+                    String mimetype = info.getString("mimetype");
+                    String thumbnail_url = info.getString("thumbnail_url");
+                    JSONObject thumbnail_info = info.getJSONObject("thumbnail_info");
+                    int w1 = thumbnail_info.getInt("w");
+                    int h1 = thumbnail_info.getInt("h");
+                    int size1 = thumbnail_info.getInt("size");
+                    String mimetype1 = thumbnail_info.getString("mimetype");
+                    m_room_message<m_image> m_imagem_room_message = new m_room_message<>();
+
+                    m_imagem_room_message.setRoom_id(roomId);
+                    m_imagem_room_message.setType(type);
+                    m_imagem_room_message.setOrigin_server_ts(origin_server_ts);
+                    m_imagem_room_message.setSender(sender);
+                    m_imagem_room_message.setEvent_id(event_id);
+                    m_imagem_room_message.setUnsigned(Unsigned.builder().age(age).build());
+                    m_imagem_room_message.setContent(m_image.builder()
+                            .body(body)
+                            .info(m_image.Info.builder().w(w).h(h).size(size).mimetype(mimetype)
+                                    .thumbnail_url(thumbnail_url)
+                                    .thumbnail_info(m_image.ThumbnailInfo.builder()
+                                            .w(w1)
+                                            .h(h1)
+                                            .size(size1)
+                                            .mimetype(mimetype1)
+                                            .build())
+                                    .build())
+                            .msgtype(msgtype)
+                            .url(thumbnail_url)
+                            .build());
+
+                    Client.onCallBackEvent(m_imagem_room_message);
 
 
-                    Log.e(TAG, "onSuccess: 消息内容" + body1);
-                } else if ("m.call.candidates".equals(type)) {
+                } else if ("m.file".equals(msgtype)) {
 
-                    int version = content.getInt("version");
+                } else if ("m.audio".equals(msgtype)) {
 
-                    String call_id = content.getString("call_id");
+                    String url = content.getString("url");
 
+                    JSONObject info = content.getJSONObject("info");
 
-                    JSONArray candidates = content.getJSONArray("candidates");
+                    String mimetype = info.getString("mimetype");
+                    int size = info.getInt("size");
 
+                    m_room_message<m_audio> m_audiom_room_message = new m_room_message<>();
 
-                    List<Candidates> candidatesList = new ArrayList<>();
+                    m_audiom_room_message.setSender(sender);
+                    m_audiom_room_message.setType(type);
+                    m_audiom_room_message.setEvent_id(event_id);
+                    m_audiom_room_message.setOrigin_server_ts(origin_server_ts);
+                    m_audiom_room_message.setRoom_id(roomId);
+                    m_audiom_room_message.setUnsigned(Unsigned.builder().age(age).build());
+                    m_audiom_room_message.setContent(m_audio.builder()
+                            .body(body)
+                            .msgtype(msgtype)
+                            .url(url)
+                            .info(m_audio.Info.builder()
+                                    .duration(0)
+                                    .mimetype(mimetype)
+                                    .size(size)
+                                    .build())
+                            .build());
 
-                    for (int it = 0; it < candidates.length(); it++) {
-                        JSONObject object = candidates.getJSONObject(it);
-                        int sdpMLineIndex = object.getInt("sdpMLineIndex");
-                        String sdpMid = object.getString("sdpMid");
-                        String candidate = object.getString("candidate");
+                    Client.onCallBackEvent(m_audiom_room_message);
 
-                        candidatesList.add(Candidates.builder().sdpMLineIndex(sdpMLineIndex).sdpMid(sdpMid).candidate(candidate).build());
-                    }
+                } else if ("m.location".equals(msgtype)) {
 
-                    eventBuilder.content(Content.builder().version(version).call_id(call_id).candidates(candidatesList).build());
+                } else if ("m.video".equals(msgtype)) {
 
                 }
 
+            } else if ("m.call.candidates".equals(type)) {
+                int version = content.getInt("version");
+                String call_id = content.getString("call_id");
+                JSONArray candidates = content.getJSONArray("candidates");
 
-                long origin_server_ts = event.getLong("origin_server_ts");
+                List<m_call_candidates.Candidate> candidateList = new ArrayList<>();
+                for (int it = 0; it < candidates.length(); it++) {
+                    JSONObject object = candidates.getJSONObject(it);
+                    int sdpMLineIndex = object.getInt("sdpMLineIndex");
+                    String sdpMid = object.getString("sdpMid");
+                    String candidate = object.getString("candidate");
 
-                eventBuilder.origin_server_ts(origin_server_ts);
-
-                JSONObject unsigned = event.getJSONObject("unsigned");
-
-
-                int age = unsigned.getInt("age");
-
-                eventBuilder.unsigned(Unsigned.builder().age(age).build());
-
-                // 事件ID
-                String event_id = event.getString("event_id");
-
-                eventBuilder.event_id(event_id);
-
-                if (Client.matrixListener != null) {
-                    Client.matrixListener.onEvent(eventBuilder.build());
+                    candidateList.add(m_call_candidates.Candidate.builder()
+                            .sdpMid(sdpMid)
+                            .sdpMLineIndex(sdpMLineIndex)
+                            .candidate(candidate)
+                            .build());
                 }
+
+
+                m_call_candidates build =
+                        m_call_candidates.builder()
+                                .room_id(roomId)
+                                .event_id(event_id)
+                                .sender(sender)
+                                .origin_server_ts(origin_server_ts)
+                                .type(type)
+                                .unsigned(Unsigned.builder()
+                                        .age(age)
+                                        .build())
+                                .content(m_call_candidates.Candidates
+                                        .builder()
+                                        .call_id(call_id)
+                                        .version(version)
+                                        .candidates(candidateList)
+                                        .build()).build();
+
+                Client.onCallBackEvent(build);
+
             }
         }
     }

@@ -32,7 +32,6 @@ import okhttp3.ResponseBody;
 
 public class RoomImpl extends IRoomAdapter {
 
-
     private static final String TAG = "RoomImpl";
 
     private RoomParticipation roomParticipation = RetrofitUtils.getInstance().getRetrofitClient(Client.getConfig().getHomeServer()).create(RoomParticipation.class);
@@ -41,6 +40,21 @@ public class RoomImpl extends IRoomAdapter {
 
 
     private String roomId;
+
+    private String displayName;
+
+    private String avatarUrl;
+
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
 
     @Override
     public String getRoomId() {
@@ -55,10 +69,7 @@ public class RoomImpl extends IRoomAdapter {
 
     @Override
     public void send(MessageModel messageModel, final MatrixCallBack callBack) {
-
-
         Log.e(TAG, "send: " + messageModel.getContent().toJson());
-
         final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), messageModel.getContent().toJson());
 
         roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId_(roomId, messageModel.getEventType(), messageModel.getContent().eventId(), Client.getData().getUserData().getAccessToken(), requestBody)
@@ -178,7 +189,6 @@ public class RoomImpl extends IRoomAdapter {
                             Log.e(TAG, "onSuccess: getRoomAliases body " + body);
 
 
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -186,7 +196,7 @@ public class RoomImpl extends IRoomAdapter {
 
                     @Override
                     public void onError(Throwable e) {
-e.printStackTrace();
+                        e.printStackTrace();
                     }
                 });
 

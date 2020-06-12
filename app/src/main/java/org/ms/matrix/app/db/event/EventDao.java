@@ -1,4 +1,4 @@
-package org.ms.matrix.app.db.messagelist;
+package org.ms.matrix.app.db.event;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

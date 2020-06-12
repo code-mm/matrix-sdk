@@ -14,55 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_push_rules implements IEvent {
+public class m_push_rules extends BaseEvent {
 
     private String type;
-    private Content content;
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @EqualsAndHashCode(callSuper = false)
-    class Content {
-
-        private Global global;
-        List<String> sender;
-
-        @Data
-        @Builder
-        @AllArgsConstructor
-        @NoArgsConstructor
-        @EqualsAndHashCode(callSuper = false)
-        class Global {
-            List<Underride> underride;
-
-            @Data
-            @Builder
-            @AllArgsConstructor
-            @NoArgsConstructor
-            @EqualsAndHashCode(callSuper = false)
-            class Underride {
-                private List<Condition> conditions;
 
 
-                private String rule_id;
-                private boolean _default;
-                private boolean enabled;
-
-
-                @Data
-                @Builder
-                @AllArgsConstructor
-                @NoArgsConstructor
-                @EqualsAndHashCode(callSuper = false)
-                class Conditions {
-
-                    private String kind;
-                    private String key;
-                    private String pattern;
-                }
-            }
-        }
-    }
 }

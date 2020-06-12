@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
 
@@ -14,7 +13,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="20dp">
-
 
 
         <TextView
@@ -47,20 +45,21 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:theme="@style/TextInputLayoutAppTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColorHint="#000000">
+                android:textColorHint="#000000"
+                android:theme="@style/TextInputLayoutAppTheme">
 
 
                 <EditText
-                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.@"
                     android:id="@+id/editTextUsername"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:hint="用户名" />
+                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.@"
+                    android:hint="用户名"
+                    android:text="maohuawei1" />
 
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -90,23 +89,23 @@
             android:layout_marginTop="10dp">
 
 
-
             <com.google.android.material.textfield.TextInputLayout
-                android:theme="@style/TextInputLayoutAppTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColorHint="#000000">
+                android:textColorHint="#000000"
+                android:theme="@style/TextInputLayoutAppTheme">
 
 
                 <EditText
-                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ."
                     android:id="@+id/editTextPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ."
                     android:hint="密码"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:text="maohuawei1" />
 
 
             </com.google.android.material.textfield.TextInputLayout>

@@ -1,16 +1,18 @@
 package org.ms.matrix.sdk.supper;
 
+import org.ms.matrix.sdk.model.event.IEvent;
 import org.ms.matrix.sdk.supper.inter.config.IConfig;
 import org.ms.matrix.sdk.supper.inter.config.IConfigAdapter;
 import org.ms.matrix.sdk.supper.inter.data.IData;
 import org.ms.matrix.sdk.supper.inter.data.IDataAdapter;
 import org.ms.matrix.sdk.supper.inter.listener.MatrixListener;
-import org.ms.matrix.sdk.supper.inter.room.IRoom;
-import org.ms.matrix.sdk.supper.inter.room.IRoomAdapter;
 import org.ms.matrix.sdk.supper.inter.room.IRooms;
 import org.ms.matrix.sdk.supper.inter.room.IRoomsAdapter;
 import org.ms.matrix.sdk.supper.inter.user.IUser;
 import org.ms.matrix.sdk.supper.inter.user.IUserAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
     private static IConfig config;
@@ -165,9 +167,19 @@ public class Client {
         return rooms;
     }
 
-    public static MatrixListener matrixListener;
+
+    public static List<MatrixListener> matrixListenerList = new ArrayList<>();
 
     public static void addListener(MatrixListener listener) {
-        matrixListener = listener;
+        matrixListenerList.add(listener);
+    }
+
+
+    public static void onCallBackEvent(IEvent event) {
+
+        if (event != null)
+            for (MatrixListener it : matrixListenerList) {
+                it.onEvent(event);
+            }
     }
 }

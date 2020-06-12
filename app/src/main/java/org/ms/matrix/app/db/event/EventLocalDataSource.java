@@ -1,4 +1,4 @@
-package org.ms.matrix.app.db.messagelist;
+package org.ms.matrix.app.db.event;
 
 import android.util.Log;
 
@@ -45,14 +45,15 @@ public class EventLocalDataSource implements EventDataSource {
             public void run() {
                 for (Event it : event) {
                     Event event1 = messageListByEventId(it.get_event_id());
-
                     if (event1 == null) {
-
                         Log.e(TAG, "run: 不存在插入");
                         dao.insert(event);
                     } else {
                         Log.e(TAG, "run: 存在更新");
-                        dao.update(event);
+                        int id = event1.get_id();
+                        event1 = it;
+                        event1.set_id(id);
+                        dao.update(event1);
                     }
                 }
             }

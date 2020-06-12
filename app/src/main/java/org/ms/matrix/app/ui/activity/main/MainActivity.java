@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 
 import org.ms.matrix.app.R;
-import org.ms.matrix.app.db.messagelist.Event;
+import org.ms.matrix.app.db.event.Event;
 import org.ms.matrix.app.db.MatrixDbInjection;
 import org.ms.matrix.app.ui.fragment.message.MessageFragment;
 import org.ms.matrix.app.ui.fragment.my.MyFragment;
@@ -17,12 +17,15 @@ import org.ms.matrix.app.ui.fragment.room.RoomFragment;
 import org.ms.matrix.sdk.client.MatrixClient;
 import org.ms.matrix.sdk.model.MessageModel;
 import org.ms.matrix.sdk.model.RoomJoinedUserInfo;
-import org.ms.matrix.sdk.model.SyncModel;
-import org.ms.matrix.sdk.model.rooms.Content;
+import org.ms.matrix.sdk.model.event.IEvent;
+import org.ms.matrix.sdk.model.event.m_call_candidates;
+import org.ms.matrix.sdk.model.event.m_call_invite;
+import org.ms.matrix.sdk.model.event.m_room_message;
+import org.ms.matrix.sdk.model.event.m_text;
+import org.ms.matrix.sdk.model.request.SyncRequest;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
 import org.ms.matrix.sdk.supper.inter.listener.MatrixListener;
 import org.ms.matrix.sdk.supper.inter.room.IRoom;
-import org.ms.matrix.sdk.utils.SinceUtils;
 import org.ms.module.base.view.BaseAppCompatActivity;
 import org.ms.module.base.view.StatusBarUtil;
 import org.ms.module.supper.client.Modules;
@@ -31,6 +34,7 @@ import org.ms.view.navigation.NavigationViewAdapter;
 import org.ms.view.navigation.NavigationViewItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,11 +100,10 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
         navigationViewMy.drawable = getDrawable(R.drawable.tab_bar_my);
         navigationViewItems.add(navigationViewMy);
 
-
         navigationViewAdapter.notificationDataChange();
 
-
         hashMapFragments.clear();
+
 
         hashMapFragments.put("消息", MessageFragment.newInstance());
         hashMapFragments.put("房间", RoomFragment.newInstance());
@@ -115,50 +118,97 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
 
         MatrixClient.getInstance().addListener(new MatrixListener() {
             @Override
-            public void onEvent(org.ms.matrix.sdk.model.rooms.Event event) {
+            public void onEvent(IEvent event) {
                 Log.e(TAG, "onEvent: " + Modules.getUtilsModule().getGsonUtils().toJson(event));
-                String type = event.getType();
 
-                // 消息类型
-                if ("m.room.message".equals(type)) {
-                    Content content = event.getContent();
+                if ("m.room.message".equals(event.getType())) {
+                    m_room_message e_m_room_message = (m_room_message) event;
+                    String msgtype = e_m_room_message.getContent().getMsgtype();
 
-                    // 获取消息类型
-                    String msgtype = content.getMsgtype();
-
-                    // 文本消息
                     if ("m.text".equals(msgtype)) {
+                        m_room_message<m_text> e_m_room_message_m_text = (m_room_message) event;
 
-                        // 消息内容
-                        String body = content.getBody();
-
-
-                        Event messageList = Event.builder()
-                                ._room_id(event.getRoomId())
-                                ._event_id(event.getEvent_id())
-                                ._message_type(event.getType())
-                                ._sender(event.getSender())
-                                ._message_content(event.getContent().getBody())
-                                ._origin_server_ts(event.getOrigin_server_ts())
+                        Event build = Event.builder()
+                                ._type(e_m_room_message.getType())
+                                ._event_id(e_m_room_message.getEvent_id())
+                                ._room_id(e_m_room_message.getRoom_id())
+                                ._origin_server_ts(e_m_room_message.getOrigin_server_ts())
+                                ._content(e_m_room_message_m_text.getContent().toJsom())
+                                ._sender(e_m_room_message.getSender())
+                                ._unsigned(e_m_room_message.getUnsigned().toJson())
+                                ._timestamp(new Date().getTime())
                                 .build();
 
+                        MatrixDbInjection.providerEventDataSource().insert(build);
 
-                        Log.e(TAG, "onEvent: 插入数据库");
-                        MatrixDbInjection.providerEventDataSource().insert(messageList);
+                    } else if ("m.emote".equals(msgtype)) {
 
+                    } else if ("m.notice".equals(msgtype)) {
+
+                    } else if ("m.image".equals(msgtype)) {
+
+                    } else if ("m.file".equals(msgtype)) {
+
+                    } else if ("m.audio".equals(msgtype)) {
+
+                    } else if ("m.location".equals(msgtype)) {
+
+                    } else if ("m.video".equals(msgtype)) {
 
                     }
+                } else if ("m.call.invite".equals(event.getType())) {
+
+
+                    m_call_invite e_m_call_invite = (m_call_invite) event;
+
+                    Event build = Event.builder()
+                            ._type(e_m_call_invite.getType())
+                            ._event_id(e_m_call_invite.getEvent_id())
+                            ._room_id(e_m_call_invite.getRoom_id())
+                            ._origin_server_ts(e_m_call_invite.getOrigin_server_ts())
+                            ._content(e_m_call_invite.getContent().toJsom())
+                            ._sender(e_m_call_invite.getSender())
+                            ._unsigned(e_m_call_invite.getUnsigned().toJson())
+                            ._timestamp(new Date().getTime())
+                            .build();
+                    MatrixDbInjection.providerEventDataSource().insert(build);
+
+
+                } else if ("m.call.hangup".equals(event.getType())) {
+
+                } else if ("m.call.candidates".equals(event.getType())) {
+
+                    m_call_candidates e_call_candidates = (m_call_candidates) event;
+
+                    Event build = Event.builder()
+                            ._type(e_call_candidates.getType())
+                            ._event_id(e_call_candidates.getEvent_id())
+                            ._room_id(e_call_candidates.getRoom_id())
+                            ._origin_server_ts(e_call_candidates.getOrigin_server_ts())
+                            ._content(e_call_candidates.getContent().toJsom())
+                            ._sender(e_call_candidates.getSender())
+                            ._unsigned(e_call_candidates.getUnsigned().toJson())
+                            ._timestamp(new Date().getTime())
+                            .build();
+                    MatrixDbInjection.providerEventDataSource().insert(build);
+
+                } else if ("".equals(event.getType())) {
+
+                } else if ("".equals(event.getType())) {
+
                 }
+
+
             }
         });
 
-        MatrixClient.getInstance().getRooms().synn(SyncModel.builder().since(SinceUtils.since()).build());
 
+        // 开始同步
+        MatrixClient.getInstance().getRooms().synn(SyncRequest.builder().build());
 
         MatrixClient.getInstance().getUser().getRoomList(new MatrixCallBack<List<String>, Throwable>() {
             @Override
             public void onSuccess(List<String> strings) {
-
 
                 Log.e(TAG, "onSuccess: " + strings.toString());
 
@@ -171,16 +221,13 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
                         public void onSuccess(IRoom iRoom) {
 
 
-
-
                             iRoom.getRoomAliases(null);
+
 
 
                             iRoom.getJoinedMembers(new MatrixCallBack<List<RoomJoinedUserInfo>, Throwable>() {
                                 @Override
                                 public void onSuccess(List<RoomJoinedUserInfo> roomJoinedUserInfos) {
-
-
                                     Log.e(TAG, "onSuccess: " + roomJoinedUserInfos.toString());
 
 
@@ -194,6 +241,7 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
 
                             Log.e(TAG, "onSuccess: " + iRoom.getRoomId());
 
+                            // 发送消息
                             iRoom.send(MessageModel.builder().content(MessageModel.MessageContent.builder().msgtype(MessageModel.MessageContent.MessageType.M_TEXT).body("Heloo").build()).eventType(MessageModel.RoomEventType.M_ROOM_MESSAGE).build(), new MatrixCallBack() {
                                 @Override
                                 public void onSuccess(Object o) {

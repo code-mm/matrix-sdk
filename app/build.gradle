@@ -41,13 +41,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.0-alpha06'
 
 
+    // web rtc
+    implementation 'org.webrtc:google-webrtc:1.0.28513'
+
+
     implementation 'org.ms:androidx-sdk-module-supper:latest'
 
     implementation "org.ms:androidx-sdk-view-natigation:latest"
 
 
-
-    implementation project(':sdk')
+    api project(':sdk')
 }
 
 
@@ -58,7 +61,6 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
-
 
 
 dependencies {

@@ -9,6 +9,11 @@ import org.ms.module.supper.client.Modules;
 
 public class App extends Application {
 
+
+
+    public static String userId;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -18,8 +23,9 @@ public class App extends Application {
         Modules.getControlSwitch().setPrintStackTrace(true);
         Modules.getLogModule().setAliyunSend(false);
 
+        // 设置url
         MatrixClient.getInstance().getConfig().setHomeServer("https://matrix.mhw828.com/");
-//        MatrixClient.getInstance().getConfig().setHomeServer("https://matrix-client.matrix.org/");
+
 
     }
 }

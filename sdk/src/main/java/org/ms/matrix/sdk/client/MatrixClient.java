@@ -3,7 +3,6 @@ package org.ms.matrix.sdk.client;
 import org.ms.matrix.sdk.supper.inter.config.IConfig;
 import org.ms.matrix.sdk.supper.Client;
 import org.ms.matrix.sdk.supper.inter.listener.MatrixListener;
-import org.ms.matrix.sdk.supper.inter.room.IRoom;
 import org.ms.matrix.sdk.supper.inter.room.IRooms;
 import org.ms.matrix.sdk.supper.inter.user.IUser;
 
@@ -33,8 +32,7 @@ public final class MatrixClient {
     }
 
 
-    public void addListener(MatrixListener listener)
-    {
+    public void addListener(MatrixListener listener) {
         Client.addListener(listener);
     }
 

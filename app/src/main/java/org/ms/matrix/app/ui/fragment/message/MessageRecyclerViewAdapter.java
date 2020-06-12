@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.ms.matrix.app.R;
-import org.ms.matrix.app.db.messagelist.Event;
+import org.ms.matrix.app.db.event.Event;
 
 import java.util.List;
 

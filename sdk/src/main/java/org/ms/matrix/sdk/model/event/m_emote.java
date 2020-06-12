@@ -1,4 +1,19 @@
 package org.ms.matrix.sdk.model.event;
 
-public class m_emote {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class m_emote  extends BaseContent{
+
+    private String msgtype;
+    private String body;
+    private String format;
+    private String formatted_body;
+
 }

@@ -20,6 +20,10 @@ public interface UserDao {
     User queryLatestUser();
 
 
+    @Query("SELECT * FROM _matrix_user WHERE _user_id=:userId")
+    User queryUserByUserId(String userId);
+
+
     @Insert
     void insert(User... users);
 

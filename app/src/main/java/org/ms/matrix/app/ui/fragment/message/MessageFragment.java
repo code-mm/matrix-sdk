@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.ms.matrix.app.R;
 import org.ms.matrix.app.db.MatrixDbInjection;
-import org.ms.matrix.app.db.messagelist.Event;
+import org.ms.matrix.app.db.event.Event;
 import org.ms.module.base.view.BaseFragment;
 
 import java.util.ArrayList;
@@ -62,7 +62,19 @@ public class MessageFragment extends BaseFragment<MessageFragmentPresenter> impl
         Set<Event> set = new TreeSet<Event>(new Comparator<Event>() {
             @Override
             public int compare(Event o1, Event o2) {
-                return o1._room_id.compareTo(o2._room_id);
+                if (o1 == null) {
+                    return -1;
+                }
+                if (o2 == null) {
+                    return -1;
+                }
+                if (o1.get_room_id() == null) {
+                    return -1;
+                }
+                if (o2.get_room_id() == null) {
+                    return -1;
+                }
+                return o1.get_room_id().compareTo(o2.get_room_id());
             }
         });
         set.addAll(aDrivers);

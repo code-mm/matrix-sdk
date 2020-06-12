@@ -16,17 +16,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_direct implements IEvent {
+public class m_direct extends BaseEvent {
     private String type;
-    private Content content;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @EqualsAndHashCode(callSuper = false)
-    class Content {
-        private String userid;
-        List<String> rooms;
-    }
+
+
 }

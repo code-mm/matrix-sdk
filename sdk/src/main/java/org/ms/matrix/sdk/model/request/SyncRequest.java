@@ -1,11 +1,14 @@
-package org.ms.matrix.sdk.model;
+package org.ms.matrix.sdk.model.request;
 
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * 同步
+ */
 @Data
 @Builder
-public class SyncModel {
+public class SyncRequest {
 
 
     private String since;
