@@ -25,6 +25,21 @@ public interface EventDao {
     @Query("SELECT * FROM _event_list")
     List<Event> queryMessageList();
 
+    @Query("SELECT * FROM _EVENT_LIST WHERE _room_id=:roomId")
+    LiveData<List<Event>> liveDataEventByRoomId(String roomId);
+
+
+    @Query("SELECT * FROM _event_list WHERE _type=:type")
+    List<Event> queryEventByType(String type);
+
+
+    @Query("SELECT * FROM _event_list WHERE _room_id=:roomId AND _type=:type")
+    List<Event> queryEventByRoomIdAndType(String roomId, String type);
+
+    @Query("SELECT * FROM _event_list WHERE _type=:type")
+    LiveData<List<Event>> liveDataEventByType(String type);
+
+
     @Insert
     void insert(Event... event);
 
@@ -33,8 +48,6 @@ public interface EventDao {
 
     @Delete
     void delete(Event... event);
-
-
 
 
 }

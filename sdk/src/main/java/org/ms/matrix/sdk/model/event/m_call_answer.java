@@ -1,5 +1,7 @@
 package org.ms.matrix.sdk.model.event;
 
+import android.telephony.SignalStrength;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +13,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class m_call_answer implements IEvent {
+public class m_call_answer extends BaseEvent {
 
     private String type;
+    private String event_id;
+    private Unsigned unsigned;
+    private String sender;
+    private String room_id;
+    private long origin_server_ts;
+    private Content content;
 
-    @Override
-    public String toJson() {
-        return null;
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+  public   static class Content extends BaseContent {
+
+        private int version;
+        private int lifetime;
+        private String call_id;
+        private Answer answer;
+
+    }
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+   public static class Answer extends BaseContent {
+        private String sdp;
+        private String type;
     }
 }

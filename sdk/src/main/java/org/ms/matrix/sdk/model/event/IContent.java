@@ -5,7 +5,7 @@ public interface IContent {
 
     String getMsgtype();
 
-    String toJsom();
+    String toJson();
 
 
 }

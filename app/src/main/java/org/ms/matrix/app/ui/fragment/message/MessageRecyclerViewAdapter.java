@@ -1,6 +1,7 @@
 package org.ms.matrix.app.ui.fragment.message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.ms.matrix.app.R;
 import org.ms.matrix.app.db.event.Event;
+import org.ms.matrix.app.ui.activity.chat.ChatActivity;
 
 import java.util.List;
 
@@ -35,8 +37,20 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<MessageRecy
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.textViewRoomName.setText(events.get(position).get_room_id() + "");
 
-        holder.textViewRoomName.setText(events.get(position).get_room_id()+"");
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("roomid", events.get(position).get_room_id());
+                intent.putExtra("content", events.get(position).get_content());
+                context.startActivity(intent);
+
+            }
+        });
 
 
     }

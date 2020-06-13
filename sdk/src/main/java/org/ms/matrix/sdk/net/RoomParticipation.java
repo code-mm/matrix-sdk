@@ -32,7 +32,7 @@ public interface RoomParticipation {
      */
 
     @PUT("_matrix/client/r0/rooms/{roomId}/send/{eventType}/{txnId}")
-    Single<ResponseBody> _matrix_client_r0_rooms_roomId_send_eventType_txnId_(
+    Single<ResponseBody> _matrix_client_r0_rooms_roomId_send_eventType_txnId(
             @Path("roomId") String roomId,
             @Path("eventType") String eventType,
             @Path("txnId") String txnId,

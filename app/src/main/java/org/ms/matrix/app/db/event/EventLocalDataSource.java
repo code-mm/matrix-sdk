@@ -39,6 +39,27 @@ public class EventLocalDataSource implements EventDataSource {
     }
 
     @Override
+    public LiveData<List<Event>> liveDataEventByRoomId(String roomId) {
+        return dao.liveDataEventByRoomId(roomId);
+    }
+
+    @Override
+    public List<Event> queryEventByType(String type) {
+        return dao.queryEventByType(type);
+    }
+
+    @Override
+    public List<Event> queryEventByRoomIdAndType(String roomId, String type) {
+        return dao.queryEventByRoomIdAndType(roomId, type);
+    }
+
+    @Override
+    public LiveData<List<Event>> liveDataEventByType(String type) {
+        return dao.liveDataEventByType(type);
+    }
+
+
+    @Override
     public void insert(Event... event) {
         Modules.getUtilsModule().getThreadPoolUtils().runSubThread(new Runnable() {
             @Override

@@ -18,6 +18,7 @@ import org.ms.matrix.sdk.client.MatrixClient;
 import org.ms.matrix.sdk.model.MessageModel;
 import org.ms.matrix.sdk.model.RoomJoinedUserInfo;
 import org.ms.matrix.sdk.model.event.IEvent;
+import org.ms.matrix.sdk.model.event.m_call_answer;
 import org.ms.matrix.sdk.model.event.m_call_candidates;
 import org.ms.matrix.sdk.model.event.m_call_invite;
 import org.ms.matrix.sdk.model.event.m_room_message;
@@ -133,7 +134,7 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
                                 ._event_id(e_m_room_message.getEvent_id())
                                 ._room_id(e_m_room_message.getRoom_id())
                                 ._origin_server_ts(e_m_room_message.getOrigin_server_ts())
-                                ._content(e_m_room_message_m_text.getContent().toJsom())
+                                ._content(e_m_room_message_m_text.getContent().toJson())
                                 ._sender(e_m_room_message.getSender())
                                 ._unsigned(e_m_room_message.getUnsigned().toJson())
                                 ._timestamp(new Date().getTime())
@@ -166,7 +167,7 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
                             ._event_id(e_m_call_invite.getEvent_id())
                             ._room_id(e_m_call_invite.getRoom_id())
                             ._origin_server_ts(e_m_call_invite.getOrigin_server_ts())
-                            ._content(e_m_call_invite.getContent().toJsom())
+                            ._content(e_m_call_invite.getContent().toJson())
                             ._sender(e_m_call_invite.getSender())
                             ._unsigned(e_m_call_invite.getUnsigned().toJson())
                             ._timestamp(new Date().getTime())
@@ -185,20 +186,30 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
                             ._event_id(e_call_candidates.getEvent_id())
                             ._room_id(e_call_candidates.getRoom_id())
                             ._origin_server_ts(e_call_candidates.getOrigin_server_ts())
-                            ._content(e_call_candidates.getContent().toJsom())
+                            ._content(e_call_candidates.getContent().toJson())
                             ._sender(e_call_candidates.getSender())
                             ._unsigned(e_call_candidates.getUnsigned().toJson())
                             ._timestamp(new Date().getTime())
                             .build();
                     MatrixDbInjection.providerEventDataSource().insert(build);
 
-                } else if ("".equals(event.getType())) {
+                } else if ("m.call.answer".equals(event.getType())) {
+                    m_call_answer e_m_call_answer = (m_call_answer) event;
+                    Event build = Event.builder()
+                            ._type(e_m_call_answer.getType())
+                            ._event_id(e_m_call_answer.getEvent_id())
+                            ._room_id(e_m_call_answer.getRoom_id())
+                            ._origin_server_ts(e_m_call_answer.getOrigin_server_ts())
+                            ._content(e_m_call_answer.getContent().toJson())
+                            ._sender(e_m_call_answer.getSender())
+                            ._unsigned(e_m_call_answer.getUnsigned().toJson())
+                            ._timestamp(new Date().getTime())
+                            .build();
+                    MatrixDbInjection.providerEventDataSource().insert(build);
 
                 } else if ("".equals(event.getType())) {
 
                 }
-
-
             }
         });
 
@@ -222,7 +233,6 @@ public class MainActivity extends BaseAppCompatActivity<MainActivityPresenter> i
 
 
                             iRoom.getRoomAliases(null);
-
 
 
                             iRoom.getJoinedMembers(new MatrixCallBack<List<RoomJoinedUserInfo>, Throwable>() {

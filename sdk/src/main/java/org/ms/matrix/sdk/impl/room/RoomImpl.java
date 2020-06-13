@@ -7,6 +7,10 @@ import org.json.JSONObject;
 import org.ms.matrix.sdk.client.MatrixClient;
 import org.ms.matrix.sdk.model.MessageModel;
 import org.ms.matrix.sdk.model.RoomJoinedUserInfo;
+import org.ms.matrix.sdk.model.event.m_call_answer;
+import org.ms.matrix.sdk.model.event.m_call_candidates;
+import org.ms.matrix.sdk.model.event.m_call_invite;
+import org.ms.matrix.sdk.model.event.m_text;
 import org.ms.matrix.sdk.model.response.EventIdResponse;
 import org.ms.matrix.sdk.net.RoomDirectory;
 import org.ms.matrix.sdk.net.RoomParticipation;
@@ -63,8 +67,6 @@ public class RoomImpl extends IRoomAdapter {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
-
-
     }
 
     @Override
@@ -72,7 +74,7 @@ public class RoomImpl extends IRoomAdapter {
         Log.e(TAG, "send: " + messageModel.getContent().toJson());
         final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), messageModel.getContent().toJson());
 
-        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId_(roomId, messageModel.getEventType(), messageModel.getContent().eventId(), Client.getData().getUserData().getAccessToken(), requestBody)
+        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId(roomId, messageModel.getEventType(), messageModel.getContent().eventId(), Client.getData().getUserData().getAccessToken(), requestBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<ResponseBody>() {
@@ -199,6 +201,135 @@ public class RoomImpl extends IRoomAdapter {
                         e.printStackTrace();
                     }
                 });
+    }
+
+
+    @Override
+    public void sendText(m_text param, MatrixCallBack callBack) {
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), param.toJson());
+
+        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId(roomId, "m.room.message", Modules.getUtilsModule().getMd5Utils().md5(param.toJson() + System.currentTimeMillis()), Client.getData().getUserData().getAccessToken(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+
+                        try {
+                            Log.e(TAG, "onSuccess: " + responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    @Override
+    public void sendCallInvite(m_call_invite.Invtie param, MatrixCallBack callBack) {
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), param.toJson());
+
+        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId(roomId, "m.call.invite", Modules.getUtilsModule().getMd5Utils().md5(param.toJson()), Client.getData().getUserData().getAccessToken(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+
+                        try {
+                            Log.e(TAG, "onSuccess: sendCallInvite  " + responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    @Override
+    public void sendCallCandidates(m_call_candidates.Candidates param, MatrixCallBack callBack) {
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), param.toJson());
+
+        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId(roomId, "m.call.candidates", Modules.getUtilsModule().getMd5Utils().md5(param.toJson()), Client.getData().getUserData().getAccessToken(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+
+                        try {
+                            Log.e(TAG, "onSuccess: sendCallCandidates " + responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+
+    @Override
+    public void sendCallAnswer(m_call_answer.Content param, MatrixCallBack callBack) {
+
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), param.toJson());
+
+        roomParticipation._matrix_client_r0_rooms_roomId_send_eventType_txnId(roomId, "m.call.answer", Modules.getUtilsModule().getMd5Utils().md5(param.toJson()), Client.getData().getUserData().getAccessToken(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ResponseBody responseBody) {
+
+                        try {
+                            Log.e(TAG, "onSuccess: sendCallAnswer " + responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                        e.printStackTrace();
+                    }
+                });
+
 
     }
 }

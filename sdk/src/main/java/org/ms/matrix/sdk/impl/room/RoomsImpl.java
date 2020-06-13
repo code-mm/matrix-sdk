@@ -1,26 +1,23 @@
 package org.ms.matrix.sdk.impl.room;
 
 import android.os.SystemClock;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.ms.matrix.sdk.model.event.Unsigned;
 import org.ms.matrix.sdk.model.event.m_audio;
+import org.ms.matrix.sdk.model.event.m_call_answer;
 import org.ms.matrix.sdk.model.event.m_call_candidates;
 import org.ms.matrix.sdk.model.event.m_call_invite;
 import org.ms.matrix.sdk.model.event.m_image;
 import org.ms.matrix.sdk.model.event.m_room_message;
 import org.ms.matrix.sdk.model.event.m_text;
-import org.ms.matrix.sdk.model.event.m_video;
 import org.ms.matrix.sdk.model.request.SyncRequest;
-
 import org.ms.matrix.sdk.net.RoomParticipation;
 import org.ms.matrix.sdk.supper.Client;
 import org.ms.matrix.sdk.supper.inter.callback.MatrixCallBack;
-import org.ms.matrix.sdk.supper.inter.listener.MatrixListener;
+
 import org.ms.matrix.sdk.supper.inter.room.IRoom;
 import org.ms.matrix.sdk.supper.inter.room.IRoomsAdapter;
 import org.ms.matrix.sdk.utils.RetrofitUtils;
@@ -39,7 +36,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 public class RoomsImpl extends IRoomsAdapter {
-
 
     private static final String TAG = "RoomsImpl";
 
@@ -89,108 +85,38 @@ public class RoomsImpl extends IRoomsAdapter {
                             try {
                                 jsonObject = new JSONObject(body);
 
-                                JSONObject account_data = jsonObject.getJSONObject("account_data");
-                                account_data(account_data);
+                                JsonAccountDataHandler.handler(jsonObject);
+                                JsonRoomsHandler.handler(jsonObject);
+                                JsontoDeviceHandler.handler(jsonObject);
+                                JsonDeviceListsHandler.handler(jsonObject);
+                                JsonpresenceHandler.handler(jsonObject);
 
-                                JSONObject to_device = jsonObject.getJSONObject("to_device");
-                                to_device(to_device);
-
-                                JSONObject device_lists = jsonObject.getJSONObject("device_lists");
-                                device_lists(device_lists);
-
-                                JSONObject presence = jsonObject.getJSONObject("presence");
-                                presence(presence);
-
+                                JsonGroupsHandler.handler(jsonObject);
                                 JSONObject rooms = jsonObject.getJSONObject("rooms");
                                 rooms(rooms);
 
-                                JSONObject groups = jsonObject.getJSONObject("groups");
-                                groups(groups);
-
-                                JSONObject device_one_time_keys_count = jsonObject.getJSONObject("device_one_time_keys_count");
-                                device_one_time_keys_count(device_one_time_keys_count);
-
+                                String next_batch = jsonObject.getString("next_batch");
+                                syncRequest.setSince(next_batch);
+                                SystemClock.sleep(1000);
+                                synn(syncRequest);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
 
-                            if (jsonObject != null) {
-                                String next_batch = null;
-                                try {
-                                    next_batch = jsonObject.getString("next_batch");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                Log.e(TAG, "onSuccess next_batch : " + next_batch);
-                                syncRequest.setSince(next_batch);
-                                SystemClock.sleep(1000);
-                                synn(syncRequest);
-                            }
-
-                            Log.e(TAG, "onSuccess: " + body);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
-
-
     }
 
-    private void device_one_time_keys_count(JSONObject device_one_time_keys_count) {
-
-
-    }
-
-    private void groups(JSONObject groups) {
-
-
-    }
-
-    private void presence(JSONObject presence) {
-
-
-    }
-
-    private void device_lists(JSONObject device_lists) {
-
-
-    }
-
-    private void to_device(JSONObject to_device) {
-
-
-    }
-
-    private void account_data(JSONObject account_data) throws JSONException {
-        JSONArray account_data_events = account_data.getJSONArray("events");
-
-
-        if (account_data_events.length() > 0)
-
-            for (int i = 0; i < account_data.length(); i++) {
-
-                JSONObject eventJSONObject = new JSONObject(account_data_events.get(i).toString());
-                String type = eventJSONObject.getString("type");
-
-                if ("m.direct".equals(type)) {
-
-                } else if ("im.vector.setting.breadcrumbs".equals(type)) {
-
-                } else if ("m.push_rules".equals(type)) {
-
-                }
-            }
-    }
 
     private void rooms(JSONObject rooms) throws JSONException {
         JSONObject join = rooms.getJSONObject("join");
@@ -472,6 +398,41 @@ public class RoomsImpl extends IRoomsAdapter {
 
                 Client.onCallBackEvent(build);
 
+            } else if ("m.call.answer".equals(type)) {
+
+                int version = content.getInt("version");
+                String call_id = content.getString("call_id");
+                int lifetime = content.getInt("lifetime");
+
+
+                JSONObject answer = content.getJSONObject("answer");
+
+                String sdp = answer.getString("sdp");
+                String type1 = answer.getString("type");
+
+
+                m_call_answer build = m_call_answer.builder()
+                        .unsigned(Unsigned.builder().age(age).build())
+                        .room_id(roomId)
+                        .event_id(event_id)
+                        .sender(sender)
+                        .origin_server_ts(origin_server_ts)
+                        .type(type)
+                        .content(m_call_answer.Content.builder()
+                                .version(version)
+                                .lifetime(lifetime)
+                                .call_id(call_id)
+                                .answer(
+                                        m_call_answer.Answer.builder()
+                                                .sdp(sdp)
+                                                .type(type1)
+                                                .build()
+                                )
+                                .build())
+
+                        .build();
+
+                Client.onCallBackEvent(build);
             }
         }
     }

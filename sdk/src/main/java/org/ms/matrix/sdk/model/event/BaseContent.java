@@ -10,7 +10,7 @@ public class BaseContent implements IContent {
     }
 
     @Override
-    public String toJsom() {
+    public String toJson() {
         return Modules.getUtilsModule().getGsonUtils().toJson(this);
     }
 }
